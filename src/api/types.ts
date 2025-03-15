@@ -33,9 +33,19 @@ export interface RegisterUserResponse {
   is_verified: boolean;
 }
 
+export interface TokenUserResponse {
+  access_token: string;
+  token_type: string;
+}
+
 export interface VerifyUserRequest {
   email: string;
   code: string;
+}
+
+export interface TokenUserRequest {
+  username: string;
+  password: string;
 }
 
 // Define error response type

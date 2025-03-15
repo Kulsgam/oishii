@@ -2,14 +2,25 @@ import {
   ApiError,
   RegisterUserRequest,
   RegisterUserResponse,
+  TokenUserRequest,
+  TokenUserResponse,
   VerifyUserRequest,
 } from "./types";
 import axios, { AxiosError } from "axios";
 import api from "./api";
+import qs from "qs";
 
-async function apiPost<T>(url: string, data: object): Promise<T> {
+async function apiPost<T>(
+  url: string,
+  data: object | string,
+  contentType: string = "application/json",
+): Promise<T> {
   try {
-    const response = await api.post<T>(url, data);
+    const response = await api.post<T>(url, data, {
+      headers: {
+        "Content-Type": contentType,
+      },
+    });
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -36,4 +47,14 @@ export async function verifyUser(
   userData: VerifyUserRequest,
 ): Promise<RegisterUserResponse> {
   return apiPost<RegisterUserResponse>("/api/v1/users/verify", userData);
+}
+
+export async function accessToken(
+  userData: TokenUserRequest,
+): Promise<TokenUserResponse> {
+  return apiPost<TokenUserResponse>(
+    "/api/v1/token",
+    qs.stringify(userData),
+    "application/x-www-form-urlencoded",
+  );
 }
