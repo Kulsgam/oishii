@@ -3,7 +3,7 @@ import {
   DummyTokenUserResponse,
   TokenUserResponse,
 } from "@/api/types";
-import { apiRequest } from "@/api/users";
+import { apiRequest } from "@/api/api";
 
 export type DummyCredentials = {
   accessToken: string;

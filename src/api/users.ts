@@ -1,3 +1,4 @@
+import { apiRequest } from "./api";
 import {
   ApiError,
   CallbackUserRequest,
@@ -6,52 +7,10 @@ import {
   VerifyUserRequest,
   UpdateUserProfileRequest,
 } from "./types";
-import axios, { AxiosError, AxiosRequestConfig } from "axios";
-import api from "./api";
-
-export async function apiRequest<T, D = undefined>(
-  url: string,
-  data?: D, // Data for POST/PATCH requests
-  method: "GET" | "POST" | "PATCH" = "POST",
-  authToken?: string,
-  contentType: string = "application/json",
-): Promise<T> {
-  try {
-    const headers: Record<string, string> = {
-      "Content-Type": contentType,
-    };
-
-    if (authToken) {
-      headers["Authorization"] = `Bearer ${authToken}`;
-    }
-
-    const config: AxiosRequestConfig = {
-      method,
-      url,
-      headers,
-      ...(method === "GET" ? { params: data } : { data }),
-    };
-
-    const response = await api(config);
-    return response.data;
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      const axiosError = error as AxiosError<ApiError>;
-      if (axiosError.response && axiosError.response.status === 422) {
-        throw new Error(
-          `Validation error: ${JSON.stringify(axiosError.response.data.detail)}`,
-        );
-      }
-    }
-    throw new Error(
-      "An unexpected error occurred while processing the request",
-    );
-  }
-}
 
 export async function registerUser(
   userData: RegisterUserRequest,
-): Promise<FullUserProfile> {
+): Promise<FullUserProfile | ApiError> {
   return apiRequest<FullUserProfile, RegisterUserRequest>(
     "/api/v1/users/register",
     userData,
@@ -60,7 +19,7 @@ export async function registerUser(
 
 export async function verifyUser(
   userData: VerifyUserRequest,
-): Promise<FullUserProfile> {
+): Promise<FullUserProfile | ApiError> {
   return apiRequest<FullUserProfile, VerifyUserRequest>(
     "/api/v1/users/verify",
     userData,
@@ -70,7 +29,7 @@ export async function verifyUser(
 
 export async function callbackHandler(
   userData: CallbackUserRequest,
-): Promise<string> {
+): Promise<string | ApiError> {
   return apiRequest<string, CallbackUserRequest>(
     "/api/v1/users/callback",
     userData,
@@ -80,7 +39,7 @@ export async function callbackHandler(
 
 export async function getUserProfile(
   authToken: string,
-): Promise<FullUserProfile> {
+): Promise<FullUserProfile | ApiError> {
   return apiRequest<FullUserProfile>(
     "/api/v1/users/profile",
     undefined,
@@ -93,7 +52,7 @@ export async function getUserProfile(
 export async function updateUserProfile(
   authToken: string,
   userData: UpdateUserProfileRequest,
-): Promise<FullUserProfile> {
+): Promise<FullUserProfile | ApiError> {
   return apiRequest<FullUserProfile, UpdateUserProfileRequest>(
     "/api/v1/users/profile",
     userData,

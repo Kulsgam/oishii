@@ -33,7 +33,11 @@ export interface FullUserProfile {
   is_verified: boolean;
 }
 
-export interface UpdateUserProfileRequest extends Omit<FullUserProfile, "id" | "created_at" | "updated_at" | "swap_rating" | "is_verified"> {}
+export interface UpdateUserProfileRequest
+  extends Omit<
+    FullUserProfile,
+    "id" | "created_at" | "updated_at" | "swap_rating" | "is_verified"
+  > {}
 
 export interface TokenUserResponse {
   accessToken: string;
@@ -74,5 +78,5 @@ export interface ValidationError {
 }
 
 export interface ApiError {
-  detail: ValidationError[];
+  detail: ValidationError[] | string;
 }
