@@ -1,0 +1,45 @@
+export interface RegisterUserRequest {
+  email: string;
+  first_name: string;
+  last_name: string;
+  bio: string;
+  cook_type: string;
+  cook_frequency: string;
+  dietary_requirements: string[];
+  allergies: string;
+  purpose: string;
+  home_address: string;
+  is_verified: boolean;
+  password: string;
+}
+
+// Define success response type
+export interface RegisterUserResponse {
+  id: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+  bio: string;
+  cook_type: string;
+  cook_frequency: string;
+  dietary_requirements: string[];
+  allergies: string;
+  purpose: string;
+  home_address: string;
+  profile_picture: string;
+  created_at: string;
+  updated_at: string;
+  swap_rating: number;
+  is_verified: boolean;
+}
+
+// Define error response type
+export interface ValidationError {
+  loc: (string | number)[];
+  msg: string;
+  type: string;
+}
+
+export interface RegisterUserError {
+  detail: ValidationError[];
+}
