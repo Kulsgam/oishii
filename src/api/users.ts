@@ -1,16 +1,16 @@
 import { apiRequest } from "./api";
 import {
-  ApiError,
   CallbackUserRequest,
   RegisterUserRequest,
   FullUserProfile,
   VerifyUserRequest,
+  ResponseType,
   UpdateUserProfileRequest,
 } from "./types";
 
 export async function registerUser(
   userData: RegisterUserRequest,
-): Promise<FullUserProfile | ApiError> {
+): Promise<ResponseType<FullUserProfile>> {
   return apiRequest<FullUserProfile, RegisterUserRequest>(
     "/api/v1/users/register",
     userData,
@@ -19,7 +19,7 @@ export async function registerUser(
 
 export async function verifyUser(
   userData: VerifyUserRequest,
-): Promise<FullUserProfile | ApiError> {
+): Promise<ResponseType<FullUserProfile>> {
   return apiRequest<FullUserProfile, VerifyUserRequest>(
     "/api/v1/users/verify",
     userData,
@@ -29,7 +29,7 @@ export async function verifyUser(
 
 export async function callbackHandler(
   userData: CallbackUserRequest,
-): Promise<string | ApiError> {
+): Promise<ResponseType<string>> {
   return apiRequest<string, CallbackUserRequest>(
     "/api/v1/users/callback",
     userData,
@@ -39,7 +39,7 @@ export async function callbackHandler(
 
 export async function getUserProfile(
   authToken: string,
-): Promise<FullUserProfile | ApiError> {
+): Promise<ResponseType<FullUserProfile>> {
   return apiRequest<FullUserProfile>(
     "/api/v1/users/profile",
     undefined,
@@ -52,7 +52,7 @@ export async function getUserProfile(
 export async function updateUserProfile(
   authToken: string,
   userData: UpdateUserProfileRequest,
-): Promise<FullUserProfile | ApiError> {
+): Promise<ResponseType<FullUserProfile>> {
   return apiRequest<FullUserProfile, UpdateUserProfileRequest>(
     "/api/v1/users/profile",
     userData,

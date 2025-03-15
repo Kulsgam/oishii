@@ -80,3 +80,8 @@ export interface ValidationError {
 export interface ApiError {
   detail: ValidationError[] | string;
 }
+
+export type ResponseType<D> = {
+  data: D | null;
+  error: ApiError | null;
+};
