@@ -1,5 +1,12 @@
 import { apiRequest } from "./api";
-import { CreateSwapRequest, CreateSwapResponse, GetSwapsQueryParams, GetSwapsResponse, ResponseType } from "./types";
+import {
+  CreateSwapRequest,
+  CreateSwapResponse,
+  GetSwapsQueryParams,
+  GetSwapsResponse,
+  ResponseType,
+  Swap,
+} from "./types";
 
 export async function createSwap(
   swapData: CreateSwapRequest,
@@ -20,6 +27,18 @@ export async function getSwaps(
   return apiRequest<GetSwapsResponse, GetSwapsQueryParams>(
     "/api/v1/swaps/swaps",
     queryParams,
+    "GET",
+    authToken,
+  );
+}
+
+export async function getSwapById(
+  swapId: string,
+  authToken: string,
+): Promise<ResponseType<Swap>> {
+  return apiRequest<Swap>(
+    `/api/v1/swaps/swaps/${swapId}`,
+    undefined,
     "GET",
     authToken,
   );
