@@ -127,6 +127,10 @@ export interface GetFoodsQueryParams {
   limit?: number;
 }
 
+export interface GetFoodsNearbyQueryParams extends GetFoodsQueryParams {
+  distance: number;
+}
+
 export interface ApiError {
   detail: ValidationError[] | string;
 }

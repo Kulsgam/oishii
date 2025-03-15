@@ -5,6 +5,7 @@ import {
   ResponseType,
   GetFoodsQueryParams,
   Foods,
+  GetFoodsNearbyQueryParams,
 } from "./types";
 
 export async function createFood(
@@ -25,6 +26,18 @@ export async function getFoods(
 ): Promise<ResponseType<Foods>> {
   return apiRequest<Foods, GetFoodsQueryParams>(
     "/api/v1/foods/foods",
+    queryParams,
+    "GET",
+    authToken,
+  );
+}
+
+export async function getFoodsNearby(
+  queryParams: GetFoodsNearbyQueryParams,
+  authToken: string,
+): Promise<ResponseType<Foods>> {
+  return apiRequest<Foods, GetFoodsNearbyQueryParams>(
+    "/api/v1/foods/nearby",
     queryParams,
     "GET",
     authToken,
