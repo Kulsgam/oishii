@@ -5,8 +5,10 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import Center from "@/components/Center";
 import { FloatingLabelInputSmall } from "@/components/FloatingLabelInputSmall";
+import { useNavigate } from "react-router";
 
 export default function Allergies() {
+    const navigate = useNavigate();
     const [allergies, setAllergies] = useState("");
 
     return (
@@ -29,8 +31,8 @@ export default function Allergies() {
 
                     </div>
                     <Button
-                        className="font-montserrat h-[40px] w-full rounded-[20px] bg-white text-[15px] text-[#f57600] hover:bg-white/90"
-                        onClick={() => console.log("Continue clicked")}
+                        className="font-montserrat h-[40px] w-full rounded-[20px] bg-white text-[15px] text-[#f57600] hover:bg-white/90 cursor-pointer"
+                        onClick={() => navigate("/intro/purpose")}
                     >
                         CONTINUE
                     </Button>
@@ -39,8 +41,8 @@ export default function Allergies() {
                     <div className="fixed bottom-6 left-6">
                         <Button
                             size="icon"
-                            className="text-[#f57600] hover:bg-white/80 bg-white"
-                            onClick={() => console.log("Back clicked")}
+                            className="text-[#f57600] hover:bg-white/80 bg-white cursor-pointer"
+                            onClick={() => navigate("/intro/dietary")}
                         >
                             <ArrowLeft className="h-6 w-6" />
                         </Button>
