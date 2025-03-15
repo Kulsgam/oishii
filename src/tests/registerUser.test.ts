@@ -1,5 +1,5 @@
 import { registerUser } from "@/api/users";
-import { validUserData, invalidUserData } from "./data.test";
+import { validUserData, invalidUserData } from "./data";
 
 describe("registerUser Integration Test", () => {
   it("should register a user successfully with real backend", async () => {

@@ -5,7 +5,7 @@ import {
 } from "@/api/types";
 
 export const validUserData: RegisterUserRequest = {
-  email: `testuser${Date.now()}@example.com`,
+  email: `testuser${Date.now()}@student.rmit.edu.au`,
   first_name: "John",
   last_name: "Doe",
   bio: "Cooking enthusiast",
@@ -46,7 +46,7 @@ export const invalidProfileUpdateData: UpdateUserProfileRequest = {
 
 export const validCallbackData: Omit<CallbackUserRequest, "tokenHash"> = {
   type: "verify", // TODO: Check if this is correct
-  email: "dummy@gmail.com",
+  email: "dummy@student.rmit.edu.au",
   next: "/", // TODO: Check if this is correct
 };
 

@@ -1,11 +1,13 @@
 import { getUserProfile, updateUserProfile } from "@/api/users";
-import { validProfileUpdateData, invalidProfileUpdateData } from "./data.test";
-import { getDummyCredentials } from "./utils.test";
-
+import { validProfileUpdateData, invalidProfileUpdateData } from "./data";
+import { getDummyCredentials } from "./utils";
 
 describe("getUserProfile Integration Test", () => {
+  let validAuthToken: string;
+  beforeAll(async () => {
+    validAuthToken = (await getDummyCredentials()).accessToken;
+  });
   it("should successfully retrieve the user profile with a valid auth token", async () => {
-    const validAuthToken = (await getDummyCredentials()).accessToken;
     const response = await getUserProfile(validAuthToken);
 
     expect(response).toHaveProperty("id");
@@ -19,8 +21,11 @@ describe("getUserProfile Integration Test", () => {
   });
 });
 
-describe("updateUserProfile Integration Test", async () => {
-  const validAuthToken = (await getDummyCredentials()).accessToken;
+describe("updateUserProfile Integration Test", () => {
+  let validAuthToken: string;
+  beforeAll(async () => {
+    validAuthToken = (await getDummyCredentials()).accessToken;
+  });
   it("should successfully update the user profile with valid data", async () => {
     const response = await updateUserProfile(
       validAuthToken,

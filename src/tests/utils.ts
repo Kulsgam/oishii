@@ -18,7 +18,7 @@ export async function getDummyCredentials(): Promise<DummyTokenUserResponse> {
   >(
     "/api/v1/token",
     {
-      email: "dummy@gmail.com",
+      email: "dummy@student.rmit.edu.au",
     },
     "GET",
   );
@@ -26,6 +26,6 @@ export async function getDummyCredentials(): Promise<DummyTokenUserResponse> {
   return {
     accessToken,
     tokenType,
-    email: "dummy@gmail.com",
+    email: "dummy@student.rmit.edu.au",
   };
 }

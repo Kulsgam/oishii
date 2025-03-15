@@ -1,6 +1,6 @@
 import { callbackHandler } from "@/api/users";
-import { validCallbackData, invalidCallbackData } from "./data.test";
-import { getDummyCredentials } from "./utils.test";
+import { validCallbackData, invalidCallbackData } from "./data";
+import { getDummyCredentials } from "./utils";
 
 describe("callbackHandler Integration Test", () => {
   it("should successfully process the callback with valid data", async () => {
