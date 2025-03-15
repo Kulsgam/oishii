@@ -6,6 +6,7 @@ import {
   GetFoodsQueryParams,
   Foods,
   GetFoodsNearbyQueryParams,
+  GetFoodByUserIdParams,
 } from "./types";
 
 export async function createFood(
@@ -77,6 +78,18 @@ export async function deleteFoodById(
     `/api/v1/foods/foods/${foodId}`,
     undefined,
     "DELETE",
+    authToken,
+  );
+}
+
+export async function getUserFoodByUserId(
+  queryParams: GetFoodByUserIdParams,
+  authToken: string,
+): Promise<ResponseType<FoodType>> {
+  return apiRequest<FoodType, GetFoodByUserIdParams>(
+    "/api/v1/foods/user/foods/",
+    queryParams,
+    "GET",
     authToken,
   );
 }

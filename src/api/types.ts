@@ -49,6 +49,13 @@ export interface FoodType {
   image_url: string;
 }
 
+export interface GetFoodByUserIdParams {
+    userId: string;
+    isAvailable?: boolean;
+    skip?: number;
+    limit?: number;
+}
+
 export interface CreateFoodResponse {
   title: string;
   description: string;
