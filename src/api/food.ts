@@ -43,3 +43,15 @@ export async function getFoodsNearby(
     authToken,
   );
 }
+
+export async function getFoodById(
+  foodId: string,
+  authToken: string,
+): Promise<ResponseType<FoodType>> {
+  return apiRequest<FoodType, void>(
+    `/api/v1/foods/foods/${foodId}`,
+    undefined,
+    "GET",
+    authToken,
+  );
+}
