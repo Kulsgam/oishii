@@ -33,6 +33,38 @@ export interface FullUserProfile {
   is_verified: boolean;
 }
 
+export interface FoodType {
+  title: string;
+  description: string;
+  category: string;
+  food_type: string;
+  dietary_requirements: string[];
+  allergens: string;
+  expiry_date: string;
+  location: string;
+  is_homemade: boolean;
+  is_available: boolean;
+  pickup_times: string[];
+  tickets_required: number;
+  image_url: string;
+}
+
+export interface CreateFoodResponse {
+  title: string;
+  description: string;
+  category: string;
+  food_type: string;
+  dietary_requirements: string[];
+  allergens: string;
+  expiry_date: string;
+  location: string;
+  is_homemade: boolean;
+  is_available: boolean;
+  pickup_times: string[];
+  tickets_required: number;
+  image_url: string;
+}
+
 export interface UpdateUserProfileRequest
   extends Omit<
     FullUserProfile,
