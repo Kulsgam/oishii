@@ -109,6 +109,24 @@ export interface ValidationError {
   type: string;
 }
 
+export interface Foods {
+  foods: FoodType[];
+}
+
+export interface GetFoodsQueryParams {
+  category?: string;
+  food_type?: string;
+  dietary_requirement?: string;
+  is_available?: boolean;
+  is_homemade?: boolean;
+  location?: string;
+  allergen_free?: boolean;
+  search?: string;
+  max_tickets?: number;
+  skip?: number;
+  limit?: number;
+}
+
 export interface ApiError {
   detail: ValidationError[] | string;
 }
