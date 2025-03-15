@@ -5,7 +5,7 @@ import {
 } from "@/api/types";
 
 export const validUserData: RegisterUserRequest = {
-  email: `testuser${Date.now()}@student.rmit.edu.au`,
+  email: `dummy@student.rmit.edu.au`,
   first_name: "John",
   last_name: "Doe",
   bio: "Cooking enthusiast",

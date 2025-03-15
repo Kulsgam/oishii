@@ -1,9 +1,6 @@
-import {
-  DummyTokenUserRequest,
-  DummyTokenUserResponse,
-  TokenUserResponse,
-} from "@/api/types";
+import { DummyTokenUserRequest } from "@/api/types";
 import { apiRequest } from "@/api/api";
+import { ResponseType } from "@/api/types";
 
 export type DummyCredentials = {
   accessToken: string;
@@ -11,21 +8,14 @@ export type DummyCredentials = {
   email: string;
 };
 
-export async function getDummyCredentials(): Promise<DummyTokenUserResponse> {
-  const { accessToken, tokenType } = await apiRequest<
-    TokenUserResponse,
-    DummyTokenUserRequest
-  >(
-    "/api/v1/token",
+export async function getDummyCredentials(): Promise<
+  ResponseType<DummyCredentials>
+> {
+  return await apiRequest<DummyCredentials, DummyTokenUserRequest>(
+    "/api/v1/users/dev/token",
     {
       email: "dummy@student.rmit.edu.au",
     },
     "GET",
   );
-
-  return {
-    accessToken,
-    tokenType,
-    email: "dummy@student.rmit.edu.au",
-  };
 }

@@ -41,11 +41,10 @@ export async function getUserProfile(
   authToken: string,
 ): Promise<ResponseType<FullUserProfile>> {
   return apiRequest<FullUserProfile>(
-    "/api/v1/users/profile",
+    "/api/v1/users/me",
     undefined,
     "GET",
     authToken,
-    "application/json",
   );
 }
 
@@ -54,7 +53,7 @@ export async function updateUserProfile(
   userData: UpdateUserProfileRequest,
 ): Promise<ResponseType<FullUserProfile>> {
   return apiRequest<FullUserProfile, UpdateUserProfileRequest>(
-    "/api/v1/users/profile",
+    "/api/v1/users/me",
     userData,
     "PATCH",
     authToken,
