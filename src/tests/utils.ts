@@ -3,8 +3,8 @@ import { apiRequest } from "@/api/api";
 import { ResponseType } from "@/api/types";
 
 export type DummyCredentials = {
-  accessToken: string;
-  tokenType: string;
+  access_token: string;
+  token_type: string;
   email: string;
 };
 

@@ -36,7 +36,7 @@ export const invalidUserData: RegisterUserRequest = {
 
 export const validProfileUpdateData: UpdateUserProfileRequest = {
   ...validUserData,
-  profile_picture: "new-picture.jpg",
+  profile_picture: "https://example.com",
 } as UpdateUserProfileRequest;
 
 export const invalidProfileUpdateData: UpdateUserProfileRequest = {
