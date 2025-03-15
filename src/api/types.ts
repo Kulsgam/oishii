@@ -161,6 +161,15 @@ export interface UpdateSwapStatusRequest {
   response_message: string;
 }
 
+export interface GetNearbySwapsResponse {
+  swaps: SwapDetail[];
+}
+
+export interface GetNearbySwapsQueryParams {
+  radius: number; // Search radius in kilometers
+  status?: string; // e.g. "potential", "accepted", "rejected", etc.
+}
+
 export interface SwapDetail extends Swap {
   requester_food: FoodType;
   provider_food: FoodType;

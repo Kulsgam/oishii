@@ -2,6 +2,8 @@ import { apiRequest } from "./api";
 import {
   CreateSwapRequest,
   CreateSwapResponse,
+  GetNearbySwapsQueryParams,
+  GetNearbySwapsResponse,
   GetSwapsQueryParams,
   GetSwapsResponse,
   ResponseType,
@@ -66,6 +68,18 @@ export async function getSwapDetail(
   return apiRequest<SwapDetail>(
     `/api/v1/swaps/swaps/${swapId}/detail`,
     undefined,
+    "GET",
+    authToken,
+  );
+}
+
+export async function getNearbySwaps(
+  queryParams: GetNearbySwapsQueryParams,
+  authToken: string,
+): Promise<ResponseType<GetNearbySwapsResponse>> {
+  return apiRequest<GetNearbySwapsResponse, GetNearbySwapsQueryParams>(
+    "/api/v1/swaps/swaps/nearby",
+    queryParams,
     "GET",
     authToken,
   );
