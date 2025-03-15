@@ -1,4 +1,4 @@
-import { RegisterUserRequest } from "@/api/types";
+import { CallbackUserRequest, RegisterUserRequest } from "@/api/types";
 
 export const validUserData: RegisterUserRequest = {
   email: `testuser${Date.now()}@example.com`,
@@ -28,4 +28,17 @@ export const invalidUserData: RegisterUserRequest = {
   home_address: "123 Test St",
   is_verified: false,
   password: "short",
+};
+
+export const validCallbackData: Omit<CallbackUserRequest, "tokenHash"> = {
+  type: "verify", // TODO: Check if this is correct
+  email: "dummy@gmail.com",
+  next: "/", // TODO: Check if this is correct
+};
+
+export const invalidCallbackData: CallbackUserRequest = {
+  tokenHash: "invalid",
+  type: "verify",
+  email: validUserData.email,
+  next: "/",
 };
