@@ -52,6 +52,13 @@ export interface DummyTokenUserRequest {
   email: string;
 }
 
+export interface CallbackUserRequest {
+  tokenHash: string;
+  type: string;
+  email: string;
+  next: string;
+}
+
 export interface TokenUserRequest {
   username: string;
   password: string;

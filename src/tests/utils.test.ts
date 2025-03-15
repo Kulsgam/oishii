@@ -20,7 +20,6 @@ export async function getDummyCredentials(): Promise<DummyTokenUserResponse> {
     {
       email: "dummy@gmail.com",
     },
-    "application/json",
     "GET",
   );
 

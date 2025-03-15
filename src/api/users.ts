@@ -1,5 +1,6 @@
 import {
   ApiError,
+  CallbackUserRequest,
   RegisterUserRequest,
   RegisterUserResponse,
   VerifyUserRequest,
@@ -10,8 +11,8 @@ import api from "./api";
 export async function apiRequest<T, D = undefined>(
   url: string,
   data?: D, // Data for POST/PATCH requests
-  contentType: string = "application/json",
   method: "GET" | "POST" | "PATCH" = "POST",
+  contentType: string = "application/json",
   authToken?: string,
 ): Promise<T> {
   try {
@@ -62,7 +63,16 @@ export async function verifyUser(
   return apiRequest<RegisterUserResponse, VerifyUserRequest>(
     "/api/v1/users/verify",
     userData,
-    "application/json",
+    "GET",
+  );
+}
+
+export async function callbackHandler(
+  userData: CallbackUserRequest,
+): Promise<string> {
+  return apiRequest<string, CallbackUserRequest>(
+    "/api/v1/users/callback",
+    userData,
     "GET",
   );
 }
