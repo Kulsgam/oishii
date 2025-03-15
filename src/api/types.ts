@@ -50,10 +50,10 @@ export interface FoodType {
 }
 
 export interface GetFoodByUserIdParams {
-    userId: string;
-    isAvailable?: boolean;
-    skip?: number;
-    limit?: number;
+  userId: string;
+  isAvailable?: boolean;
+  skip?: number;
+  limit?: number;
 }
 
 export interface CreateFoodResponse {
@@ -146,3 +146,14 @@ export type ResponseType<D> = {
   data: D | null;
   error: ApiError | null;
 };
+
+export interface GetPersonalizedFoodsQueryParams {
+  search_term?: string;
+  food_type?: string;
+  category?: string;
+  max_distance?: number;
+  max_tickets?: number;
+  is_available?: boolean;
+  skip?: number;
+  limit?: number;
+}

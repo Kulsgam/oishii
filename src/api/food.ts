@@ -7,6 +7,7 @@ import {
   Foods,
   GetFoodsNearbyQueryParams,
   GetFoodByUserIdParams,
+  GetPersonalizedFoodsQueryParams,
 } from "./types";
 
 export async function createFood(
@@ -102,6 +103,18 @@ export async function fullfillFoodReq(
     `/api/v1/foods/foods/${foodId}/fulfill`,
     undefined,
     "PATCH",
+    authToken,
+  );
+}
+
+export async function getPersonalizedFoods(
+  queryParams: GetPersonalizedFoodsQueryParams,
+  authToken: string,
+): Promise<ResponseType<Foods>> {
+  return apiRequest<Foods, GetPersonalizedFoodsQueryParams>(
+    "/api/v1/foods/foods/search/personalized",
+    queryParams,
+    "GET",
     authToken,
   );
 }
