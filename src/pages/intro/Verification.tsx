@@ -5,9 +5,11 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import Center from "@/components/Center";
 import { FloatingLabelInputSmall } from "@/components/FloatingLabelInputSmall";
+import { useNavigate } from "react-router";
 
 export default function Verification() {
-    const [uniEmail, setUniEmail] = useState("");
+    const navigate = useNavigate();
+    const [code, setCode] = useState("");
 
     return (
         <Center>
@@ -19,8 +21,8 @@ export default function Verification() {
                     <div>
                         <FloatingLabelInputSmall
                             label="Enter your code"
-                            value={uniEmail}
-                            onChange={(e) => setUniEmail(e.target.value)}
+                            value={code}
+                            onChange={(e) => setCode(e.target.value)}
                         />
 
                         <h1 className="font-montserrat text-[15px] mt-2 font-semibold cursor-pointer">
@@ -40,7 +42,7 @@ export default function Verification() {
                         <Button
                             size="icon"
                             className="text-[#f57600] hover:bg-white/80 bg-white"
-                            onClick={() => console.log("Back clicked")}
+                            onClick={() => navigate("/intro/uniemail")}
                         >
                             <ArrowLeft className="h-6 w-6" />
                         </Button>

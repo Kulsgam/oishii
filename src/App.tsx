@@ -14,6 +14,7 @@ import Verification from "@/pages/intro/Verification";
 
 
 import "./App.css";
+import DiscoverMeal from "./pages/dashboard/DiscoverMeal";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
         <Route path="intro/uniemail" element={<UniEmail />} />
         <Route path="intro/verification" element={<Verification />} />
         <Route path="intro/loading" element={<Loading />} />
+        <Route path="/dashboard/discovermeal" element={<DiscoverMeal />} />
       </Routes>
     </Router >
   );
