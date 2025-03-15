@@ -68,3 +68,15 @@ export async function updateFoodById(
     authToken,
   );
 }
+
+export async function deleteFoodById(
+  foodId: string,
+  authToken: string,
+): Promise<ResponseType<FoodType>> {
+  return apiRequest<FoodType, void>(
+    `/api/v1/foods/foods/${foodId}`,
+    undefined,
+    "DELETE",
+    authToken,
+  );
+}

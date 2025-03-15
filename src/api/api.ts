@@ -10,7 +10,7 @@ export default api;
 export async function apiRequest<T, D = undefined>(
   url: string,
   data?: D, // Data for POST/PATCH requests
-  method: "GET" | "POST" | "PATCH" = "POST",
+  method: "GET" | "POST" | "PATCH" | "DELETE" = "POST",
   authToken?: string,
   contentType: string = "application/json",
 ): Promise<ResponseType<T>> {
