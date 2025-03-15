@@ -228,10 +228,17 @@ export interface Notification {
   created_at: string;
 }
 
+export interface CreateNoficationRequest
+  extends Omit<Notification, "id" | "created_at" | "user_id"> {}
+
 /** Query parameters for getting notifications */
 export interface GetNotificationsQueryParams {
   is_read?: boolean; // Whether to filter by read/unread
   type?: string; // e.g. "swap_request", "general", etc.
   skip?: number; // Pagination offset
   limit?: number; // Pagination limit
+}
+
+export interface MarkNotificationsRequest {
+  is_read: boolean; // true to mark as read, false to mark as unread
 }
