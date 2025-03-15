@@ -12,8 +12,8 @@ export async function apiRequest<T, D = undefined>(
   url: string,
   data?: D, // Data for POST/PATCH requests
   method: "GET" | "POST" | "PATCH" = "POST",
-  contentType: string = "application/json",
   authToken?: string,
+  contentType: string = "application/json",
 ): Promise<T> {
   try {
     const headers: Record<string, string> = {
@@ -74,5 +74,17 @@ export async function callbackHandler(
     "/api/v1/users/callback",
     userData,
     "GET",
+  );
+}
+
+export async function getUserProfile(
+  authToken: string,
+): Promise<RegisterUserResponse> {
+  return apiRequest<RegisterUserResponse>(
+    "/api/v1/users/profile",
+    undefined,
+    "GET",
+    authToken,
+    "application/json",
   );
 }
