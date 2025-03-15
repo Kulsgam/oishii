@@ -15,6 +15,10 @@ import Verification from "@/pages/intro/Verification";
 
 import "./App.css";
 import DiscoverMeal from "./pages/dashboard/DiscoverMeal";
+import MealSwap from "./pages/dashboard/MealSwap";
+import MealForm from "./pages/dashboard/MealForm";
+import TimeSelector from "./pages/dashboard/TimeSelector";
+import DeliveryMethod from "./pages/dashboard/DeliveryMethod";
 
 function App() {
   return (
@@ -34,6 +38,10 @@ function App() {
         <Route path="intro/verification" element={<Verification />} />
         <Route path="intro/loading" element={<Loading />} />
         <Route path="/dashboard/discovermeal" element={<DiscoverMeal />} />
+        <Route path="/dashboard/mealswap" element={<MealSwap />} />
+        <Route path="/dashboard/mealform" element={<MealForm />} />
+        <Route path="/dashboard/timeselector" element={<TimeSelector />} />
+        <Route path="/dashboard/deliverymethod" element={<DeliveryMethod />} />
       </Routes>
     </Router >
   );
