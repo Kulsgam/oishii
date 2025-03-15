@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "<backend_url>",
+  baseURL: "https://oishii-backend.fly.dev/",
   headers: {
     "Content-Type": "application/json",
   },
