@@ -47,6 +47,7 @@ export interface FoodType {
   pickup_times: string[];
   tickets_required: number;
   image_url: string;
+  delivery_method?: string; // "pickup", "delivery", or "flexible"
 }
 
 export interface GetFoodByUserIdParams {

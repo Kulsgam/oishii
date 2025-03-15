@@ -1,19 +1,25 @@
-import { Search } from "lucide-react"
+import { Search, MapPin } from "lucide-react"
 // import Image from "next/image"
 import { Input } from "@/components/ui/input"
 import MobileNav from "./MobileNav"
 import { SearchOverlay } from "./SearchOverlay"
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router"
-import { fetchMeals, Meal } from "@/api/meals"
+import { fetchNearbyMeals, fetchMeals, Meal } from "@/api/meals"
 import { Skeleton } from "@/components/ui/skeleton"
 import { redirectIfUnauthenticated, isAuthenticated } from "@/utils/auth"
+import { LocationPicker, Location } from "@/components/maps/LocationPicker"
+import { Button } from "@/components/ui/button"
+import { LocationMap } from "@/components/maps/LocationMap"
 
 export default function DiscoverMeals() {
     const [isSearchOpen, setIsSearchOpen] = useState(false)
     const [meals, setMeals] = useState<Meal[]>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
+    const [showLocationPicker, setShowLocationPicker] = useState(false)
+    const [location, setLocation] = useState<Location | null>(null)
+    const [deliveryMethod, setDeliveryMethod] = useState<string>("flexible")
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -22,38 +28,84 @@ export default function DiscoverMeals() {
             return;
         }
 
-        const loadMeals = async () => {
+        // Try to load saved location from localStorage
+        const savedLocation = localStorage.getItem("user_location");
+        if (savedLocation) {
             try {
-                setLoading(true)
-                const token = localStorage.getItem("auth_token");
-                if (!token) {
-                    throw new Error("Authentication token not found");
-                }
-                
-                const response = await fetchMeals({ 
-                    is_available: true,
-                    limit: 10
-                }, token) // Pass the token to the API call
-                setMeals(response.meals)
-                setError(null)
-            } catch (err) {
-                console.error("Failed to load meals:", err)
-                setError("Failed to load meals. Please try again.")
-                
-                // If error is related to authentication, redirect to login
-                if (!isAuthenticated()) {
-                    navigate("/intro/getstarted");
-                }
-            } finally {
-                setLoading(false)
+                setLocation(JSON.parse(savedLocation));
+            } catch (e) {
+                console.error("Error parsing saved location:", e);
             }
         }
 
-        loadMeals()
+        // Try to load saved delivery method from localStorage
+        const savedDeliveryMethod = localStorage.getItem("delivery_method");
+        if (savedDeliveryMethod) {
+            setDeliveryMethod(savedDeliveryMethod);
+        }
+
+        loadMeals();
     }, [navigate])
+
+    const loadMeals = async () => {
+        try {
+            setLoading(true)
+            const token = localStorage.getItem("auth_token");
+            if (!token) {
+                throw new Error("Authentication token not found");
+            }
+            
+            let response;
+            
+            // If we have a location, use the nearby endpoint
+            if (location) {
+                response = await fetchNearbyMeals(
+                    location.formatted_address,
+                    5.0, // 5km radius
+                    { 
+                        is_available: true,
+                        limit: 10
+                    }, 
+                    token
+                );
+            } else {
+                // Otherwise use the regular endpoint
+                response = await fetchMeals({ 
+                    is_available: true,
+                    limit: 10
+                }, token);
+            }
+            
+            setMeals(response.meals)
+            setError(null)
+        } catch (err) {
+            console.error("Failed to load meals:", err)
+            setError("Failed to load meals. Please try again.")
+            
+            // If error is related to authentication, redirect to login
+            if (!isAuthenticated()) {
+                navigate("/intro/getstarted");
+            }
+        } finally {
+            setLoading(false)
+        }
+    }
 
     const handleMealClick = (mealId: string) => {
         navigate(`/dashboard/meal/${mealId}`)
+    }
+
+    const handleLocationSelected = (newLocation: Location) => {
+        setLocation(newLocation);
+        localStorage.setItem("user_location", JSON.stringify(newLocation));
+        
+        // After setting location, reload meals
+        loadMeals();
+    }
+
+    const handleDeliveryMethodChange = (method: string) => {
+        setDeliveryMethod(method);
+        localStorage.setItem("delivery_method", method);
     }
 
     return (
@@ -61,6 +113,95 @@ export default function DiscoverMeals() {
             <div className="px-4 py-6 pb-20">
                 {/* Header */}
                 <h1 className="text-2xl font-bold mb-4">Discover Meals</h1>
+
+                {/* Location and Filter Section */}
+                <div className="mb-6">
+                    {location ? (
+                        <div className="mb-4">
+                            <div className="flex items-center justify-between mb-2">
+                                <div className="flex items-center">
+                                    <MapPin className="h-4 w-4 mr-1" />
+                                    <span className="text-sm truncate max-w-[200px]">
+                                        {location.formatted_address}
+                                    </span>
+                                </div>
+                                <Button 
+                                    variant="outline" 
+                                    size="sm"
+                                    onClick={() => setShowLocationPicker(!showLocationPicker)}
+                                >
+                                    {showLocationPicker ? "Hide" : "Change"}
+                                </Button>
+                            </div>
+                            
+                            {!showLocationPicker && (
+                                <div className="mb-4">
+                                    <LocationMap location={location} height="150px" />
+                                </div>
+                            )}
+                            
+                            <div className="flex gap-2 mb-2">
+                                <div 
+                                    className={`flex-1 text-center py-1 px-2 rounded-full text-xs cursor-pointer ${
+                                        deliveryMethod === "pickup" 
+                                            ? "bg-[#FF6B00] text-white" 
+                                            : "border border-[#FF6B00] text-[#FF6B00]"
+                                    }`}
+                                    onClick={() => handleDeliveryMethodChange("pickup")}
+                                >
+                                    Pickup
+                                </div>
+                                <div 
+                                    className={`flex-1 text-center py-1 px-2 rounded-full text-xs cursor-pointer ${
+                                        deliveryMethod === "delivery" 
+                                            ? "bg-[#FF6B00] text-white" 
+                                            : "border border-[#FF6B00] text-[#FF6B00]"
+                                    }`}
+                                    onClick={() => handleDeliveryMethodChange("delivery")}
+                                >
+                                    Delivery
+                                </div>
+                                <div 
+                                    className={`flex-1 text-center py-1 px-2 rounded-full text-xs cursor-pointer ${
+                                        deliveryMethod === "flexible" 
+                                            ? "bg-[#FF6B00] text-white" 
+                                            : "border border-[#FF6B00] text-[#FF6B00]"
+                                    }`}
+                                    onClick={() => handleDeliveryMethodChange("flexible")}
+                                >
+                                    Flexible
+                                </div>
+                            </div>
+                        </div>
+                    ) : (
+                        <Button 
+                            className="w-full mb-4"
+                            onClick={() => setShowLocationPicker(true)}
+                        >
+                            Set Your Location
+                        </Button>
+                    )}
+                    
+                    {showLocationPicker && (
+                        <div className="mb-4">
+                            <LocationPicker
+                                initialLocation={location || undefined}
+                                onLocationSelected={handleLocationSelected}
+                                deliveryMethod={deliveryMethod}
+                                onDeliveryMethodChange={handleDeliveryMethodChange}
+                            />
+                            <Button 
+                                className="w-full mt-4"
+                                onClick={() => {
+                                    setShowLocationPicker(false);
+                                    loadMeals();
+                                }}
+                            >
+                                Apply Filters
+                            </Button>
+                        </div>
+                    )}
+                </div>
 
                 {/* Search Bar */}
                 <div className="relative mb-6">
@@ -88,7 +229,7 @@ export default function DiscoverMeals() {
                         <div className="text-center py-10">
                             <p className="text-red-500 mb-2">{error}</p>
                             <button 
-                                onClick={() => window.location.reload()}
+                                onClick={() => loadMeals()}
                                 className="text-sm underline"
                             >
                                 Try again
@@ -116,6 +257,12 @@ export default function DiscoverMeals() {
                                         alt={meal.title}
                                         className="object-cover w-full h-full"
                                     />
+                                    {meal.delivery_method && (
+                                        <div className="absolute bottom-2 right-2 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded">
+                                            {meal.delivery_method === "pickup" ? "Pickup Only" : 
+                                             meal.delivery_method === "delivery" ? "Delivery Only" : "Flexible"}
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         ))

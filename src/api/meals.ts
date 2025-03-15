@@ -21,6 +21,7 @@ export interface Meal {
   user_rating: number;
   created_at: string;
   updated_at: string;
+  delivery_method?: string; // "pickup", "delivery", or "flexible"
 }
 
 export interface MealsResponse {

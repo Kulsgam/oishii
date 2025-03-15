@@ -6,16 +6,18 @@ import { ArrowLeft } from "lucide-react";
 import Center from "@/components/Center";
 import { FloatingLabelInputSmall } from "@/components/FloatingLabelInputSmall";
 import { useNavigate } from "react-router";
+import { LocationPicker, Location } from "@/components/maps/LocationPicker";
 
 export default function HomeAddress() {
     const navigate = useNavigate();
     const [homeAddress, setHomeAddress] = useState("");
     const [error, setError] = useState<string | null>(null);
     const [skipAddress, setSkipAddress] = useState(false);
+    const [location, setLocation] = useState<Location | null>(null);
 
     const validateForm = () => {
-        if (!homeAddress.trim() && !skipAddress) {
-            setError("Please enter your address or click 'Fill this later'");
+        if (!homeAddress.trim() && !location && !skipAddress) {
+            setError("Please enter your address, select a location on the map, or click 'Fill this later'");
             return false;
         }
         setError(null);
@@ -24,7 +26,10 @@ export default function HomeAddress() {
 
     const handleContinue = () => {
         if (validateForm()) {
-            if (homeAddress.trim()) {
+            if (location) {
+                localStorage.setItem("user_location", JSON.stringify(location));
+                localStorage.setItem("user_home_address", location.formatted_address);
+            } else if (homeAddress.trim()) {
                 localStorage.setItem("user_home_address", homeAddress);
             }
             navigate("/intro/uniemail");
@@ -35,6 +40,11 @@ export default function HomeAddress() {
         setSkipAddress(true);
         setError(null);
         navigate("/intro/uniemail");
+    };
+
+    const handleLocationSelected = (newLocation: Location) => {
+        setLocation(newLocation);
+        setHomeAddress(newLocation.formatted_address);
     };
 
     return (
@@ -50,6 +60,14 @@ export default function HomeAddress() {
                             value={homeAddress}
                             onChange={(e) => setHomeAddress(e.target.value)}
                         />
+
+                        <div className="mt-4 bg-white p-4 rounded-lg">
+                            <h2 className="text-[#f57600] font-semibold mb-2">Or select your location on the map</h2>
+                            <LocationPicker
+                                initialLocation={location || undefined}
+                                onLocationSelected={handleLocationSelected}
+                            />
+                        </div>
 
                         {error && (
                             <p className="text-white text-sm mt-1">{error}</p>

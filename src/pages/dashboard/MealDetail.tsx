@@ -1,4 +1,4 @@
-import { ArrowLeft, Clock, MapPin, Tag, User, AlertCircle } from "lucide-react"
+import { ArrowLeft, Clock, MapPin, Tag, User, AlertCircle, Truck } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { useNavigate, useParams } from "react-router"
@@ -6,6 +6,8 @@ import { useState, useEffect } from "react"
 import { Skeleton } from "@/components/ui/skeleton"
 import MobileNav from "./MobileNav"
 import { fetchMealById } from "@/api/meals"
+import { LocationMap } from "@/components/maps/LocationMap"
+import { Location } from "@/components/maps/LocationPicker"
 
 interface Meal {
   id: string;
@@ -25,6 +27,7 @@ interface Meal {
   user_id: string;
   user_name: string;
   user_rating: number;
+  delivery_method?: string;
 }
 
 export default function MealDetail() {
@@ -33,6 +36,7 @@ export default function MealDetail() {
   const [meal, setMeal] = useState<Meal | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [locationData, setLocationData] = useState<Location | null>(null);
 
   useEffect(() => {
     const loadMeal = async () => {
@@ -41,6 +45,32 @@ export default function MealDetail() {
         setLoading(true);
         const data = await fetchMealById(id);
         setMeal(data);
+        
+        // Try to parse location string into a Location object
+        if (data.location) {
+          try {
+            // First check if it's already a JSON object
+            if (typeof data.location === 'object') {
+              setLocationData(data.location as unknown as Location);
+            } else {
+              // Try to geocode the location string
+              const geocoder = new google.maps.Geocoder();
+              geocoder.geocode({ address: data.location }, (results, status) => {
+                if (status === 'OK' && results && results[0]) {
+                  const location: Location = {
+                    latitude: results[0].geometry.location.lat(),
+                    longitude: results[0].geometry.location.lng(),
+                    formatted_address: data.location,
+                  };
+                  setLocationData(location);
+                }
+              });
+            }
+          } catch (e) {
+            console.error("Error parsing location:", e);
+          }
+        }
+        
         setError(null);
       } catch (err) {
         setError("Failed to load meal details. Please try again.");
@@ -55,6 +85,32 @@ export default function MealDetail() {
 
   const handleSwapRequest = () => {
     navigate(`/dashboard/mealswap/${id}`);
+  };
+
+  const renderDeliveryMethod = () => {
+    if (!meal?.delivery_method) return null;
+    
+    let methodText = "";
+    switch (meal.delivery_method) {
+      case "pickup":
+        methodText = "Pickup Only";
+        break;
+      case "delivery":
+        methodText = "Delivery Only";
+        break;
+      case "flexible":
+        methodText = "Pickup or Delivery";
+        break;
+      default:
+        methodText = meal.delivery_method;
+    }
+    
+    return (
+      <div className="flex items-center gap-2 mt-4">
+        <Truck className="h-5 w-5 text-[#FF6B00]" />
+        <span>{methodText}</span>
+      </div>
+    );
   };
 
   if (loading) {
@@ -148,12 +204,18 @@ export default function MealDetail() {
             </div>
           </div>
 
-          <div className="flex items-start">
-            <MapPin className="h-5 w-5 mr-2 text-[#FF6B00] flex-shrink-0 mt-0.5" />
-            <div>
-              <p className="font-medium">Location</p>
-              <p className="text-gray-600">{meal.location}</p>
+          {/* Location */}
+          <div className="mt-4">
+            <div className="flex items-center gap-2">
+              <MapPin className="h-5 w-5 text-[#FF6B00]" />
+              <span>{meal.location}</span>
             </div>
+            
+            {locationData && (
+              <div className="mt-2">
+                <LocationMap location={locationData} height="200px" />
+              </div>
+            )}
           </div>
 
           <div className="flex items-start">
@@ -191,6 +253,9 @@ export default function MealDetail() {
           <h3 className="font-bold mb-2">Allergens</h3>
           <p className="text-gray-600">{meal.allergens || "None specified"}</p>
         </div>
+
+        {/* Delivery Method */}
+        {renderDeliveryMethod()}
 
         {/* Swap Button */}
         <Button 
