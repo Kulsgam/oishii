@@ -39,8 +39,9 @@ export interface TokenUserResponse {
 }
 
 export interface VerifyUserRequest {
+  token: string;
+  confirmationToken: string;
   email: string;
-  code: string;
 }
 
 export interface DummyTokenUserResponse extends TokenUserResponse {

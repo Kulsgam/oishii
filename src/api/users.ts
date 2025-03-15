@@ -56,5 +56,5 @@ export async function registerUser(
 export async function verifyUser(
   userData: VerifyUserRequest,
 ): Promise<RegisterUserResponse> {
-  return apiRequest<RegisterUserResponse>("/api/v1/users/verify", userData);
+  return apiRequest<RegisterUserResponse>("/api/v1/users/verify", userData, "application/json", "GET");
 }
