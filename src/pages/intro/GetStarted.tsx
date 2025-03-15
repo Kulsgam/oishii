@@ -5,16 +5,16 @@ export default function GetStarted() {
   return (
     <Center>
       <div className="block">
-        <h1 className="text-[64px] font-moul text-center leading-none mb-2">
+        <h1 className="font-moul mb-2 text-center text-[64px] leading-none">
           Oishii
         </h1>
         <div className="w-[327px]">
-          <p className="text-[20px] font-montserrat font-bold text-center leading-tight">
+          <p className="font-montserrat text-center text-[20px] leading-tight font-bold">
             A meal swap marketplace for students and by students.
           </p>
         </div>
-        <div className="flex justify-center mt-10">
-          <Button className="text-[#f57600] w-[257px] h-[44px] font-montserrat font-semibold text-[20px] rounded-[20px]">
+        <div className="mt-10 flex justify-center">
+          <Button className="font-montserrat h-[44px] w-[257px] rounded-[20px] text-[20px] font-semibold text-[#f57600]">
             Get Started
           </Button>
         </div>
