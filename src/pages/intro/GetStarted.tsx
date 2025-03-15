@@ -1,7 +1,9 @@
+import Center from "@/components/Center";
+
 export default function GetStarted() {
   return (
-    <div className="flex items-center justify-center h-screen">
+    <Center>
       <h1 className="text-[64px] font-bold">Oishii</h1>
-    </div>
+    </Center>
   );
 }
