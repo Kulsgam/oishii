@@ -10,17 +10,29 @@ import axios, { AxiosError } from "axios";
 import api from "./api";
 import qs from "qs";
 
-async function apiPost<T>(
+async function apiRequest<T>(
   url: string,
-  data: object | string,
+  data?: object | string,
   contentType: string = "application/json",
+  method: "GET" | "POST" | "PATCH" = "POST",
+  authToken?: string,
 ): Promise<T> {
   try {
-    const response = await api.post<T>(url, data, {
-      headers: {
-        "Content-Type": contentType,
-      },
+    const headers: Record<string, string> = {
+      "Content-Type": contentType,
+    };
+
+    if (authToken) {
+      headers["Authorization"] = `Bearer ${authToken}`;
+    }
+
+    const response = await api({
+      method,
+      url,
+      data,
+      headers,
     });
+
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -40,19 +52,19 @@ async function apiPost<T>(
 export async function registerUser(
   userData: RegisterUserRequest,
 ): Promise<RegisterUserResponse> {
-  return apiPost<RegisterUserResponse>("/api/v1/users/register", userData);
+  return apiRequest<RegisterUserResponse>("/api/v1/users/register", userData);
 }
 
 export async function verifyUser(
   userData: VerifyUserRequest,
 ): Promise<RegisterUserResponse> {
-  return apiPost<RegisterUserResponse>("/api/v1/users/verify", userData);
+  return apiRequest<RegisterUserResponse>("/api/v1/users/verify", userData);
 }
 
 export async function accessToken(
   userData: TokenUserRequest,
 ): Promise<TokenUserResponse> {
-  return apiPost<TokenUserResponse>(
+  return apiRequest<TokenUserResponse>(
     "/api/v1/token",
     qs.stringify(userData),
     "application/x-www-form-urlencoded",
