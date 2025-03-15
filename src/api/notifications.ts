@@ -31,6 +31,43 @@ export async function markAllNotifications(
   );
 }
 
+export async function markNotification(
+  notificationId: string,
+  requestBody: MarkNotificationsRequest,
+  authToken: string,
+): Promise<ResponseType<Notification>> {
+  return apiRequest<Notification, MarkNotificationsRequest>(
+    `/api/v1/notifications/notifications/${notificationId}`,
+    requestBody,
+    "PATCH",
+    authToken,
+  );
+}
+
+export async function deleteNotification(
+  notificationId: string,
+  authToken: string,
+): Promise<ResponseType<string>> {
+  return apiRequest<string, null>(
+    `/api/v1/notifications/notifications/${notificationId}`,
+    null,
+    "DELETE",
+    authToken,
+  );
+}
+
+export async function createNearbyFoodNotifications(
+  radius: number,
+  authToken: string,
+): Promise<ResponseType<string>> {
+  return apiRequest<string, null>(
+    `/api/v1/notifications/notifications/nearby-foods?radius=${radius}`,
+    null,
+    "POST",
+    authToken,
+  );
+}
+
 export async function createNotification(
   requestBody: CreateNoficationRequest,
   authToken: string,
