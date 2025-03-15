@@ -161,6 +161,11 @@ export interface UpdateSwapStatusRequest {
   response_message: string;
 }
 
+export interface SwapDetail extends Swap {
+  requester_food: FoodType;
+  provider_food: FoodType;
+}
+
 export interface Foods {
   foods: FoodType[];
 }
