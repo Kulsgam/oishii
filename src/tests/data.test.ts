@@ -1,4 +1,8 @@
-import { CallbackUserRequest, RegisterUserRequest } from "@/api/types";
+import {
+  CallbackUserRequest,
+  RegisterUserRequest,
+  UpdateUserProfileRequest,
+} from "@/api/types";
 
 export const validUserData: RegisterUserRequest = {
   email: `testuser${Date.now()}@example.com`,
@@ -29,6 +33,16 @@ export const invalidUserData: RegisterUserRequest = {
   is_verified: false,
   password: "short",
 };
+
+export const validProfileUpdateData: UpdateUserProfileRequest = {
+  ...validUserData,
+  profile_picture: "new-picture.jpg",
+} as UpdateUserProfileRequest;
+
+export const invalidProfileUpdateData: UpdateUserProfileRequest = {
+  ...invalidUserData,
+  profile_picture: "new-picture.jpg",
+} as UpdateUserProfileRequest;
 
 export const validCallbackData: Omit<CallbackUserRequest, "tokenHash"> = {
   type: "verify", // TODO: Check if this is correct
