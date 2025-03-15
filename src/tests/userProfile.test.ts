@@ -1,4 +1,8 @@
-import { getUserProfile, updateUserProfile } from "@/api/users";
+import {
+  getUserProfile,
+  updateUserProfile,
+  getPublicProfile,
+} from "@/api/users";
 import { validProfileUpdateData, invalidProfileUpdateData } from "./data";
 import { getDummyCredentials } from "./utils";
 
@@ -30,7 +34,7 @@ describe("getUserProfile Integration Test", () => {
 
     expect(response).toHaveProperty("data", null);
     expect(response).toHaveProperty("error");
-    expect(response.error).toBeNull();
+    expect(response.error).not.toBeNull();
   });
 });
 
@@ -71,6 +75,47 @@ describe("updateUserProfile Integration Test", () => {
 
   it("should return an error when updating the profile with an invalid auth token", async () => {
     const response = await updateUserProfile("invalid", validProfileUpdateData);
+
+    expect(response).toHaveProperty("data", null);
+    expect(response).toHaveProperty("error");
+    expect(response.error).not.toBeNull();
+  });
+});
+
+describe("getPublicProfile Integration Test", () => {
+  let validAuthToken: string;
+  let userId: string = "4b8b8778-efae-49a7-823d-01c357275c4b";
+
+  beforeAll(async () => {
+    const credentials = await getDummyCredentials();
+    expect(credentials).toHaveProperty("data");
+    expect(credentials.data).not.toBeNull();
+    validAuthToken = credentials.data!.accessToken;
+  });
+
+  it("should successfully retrieve the public profile of the user", async () => {
+    const response = await getPublicProfile(userId, validAuthToken);
+
+    expect(response).toHaveProperty("error", null);
+    expect(response).toHaveProperty("data");
+    expect(response.data).not.toBeNull();
+
+    expect(response.data!.id).toBe(userId);
+    expect(response.data).toHaveProperty("email");
+    expect(response.data).toHaveProperty("first_name");
+    expect(response.data).toHaveProperty("profile_picture");
+  });
+
+  it("should return an error when retrieving a public profile with an invalid auth token", async () => {
+    const response = await getPublicProfile(userId, "invalid");
+
+    expect(response).toHaveProperty("data", null);
+    expect(response).toHaveProperty("error");
+    expect(response.error).not.toBeNull();
+  });
+
+  it("should return an error when retrieving a public profile with an invalid user ID", async () => {
+    const response = await getPublicProfile("invalid-user-id", validAuthToken);
 
     expect(response).toHaveProperty("data", null);
     expect(response).toHaveProperty("error");
