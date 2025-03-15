@@ -55,3 +55,16 @@ export async function getFoodById(
     authToken,
   );
 }
+
+export async function updateFoodById(
+  foodId: string,
+  userData: FoodType,
+  authToken: string,
+): Promise<ResponseType<FoodType>> {
+  return apiRequest<FoodType, FoodType>(
+    `/api/v1/foods/foods/${foodId}`,
+    userData,
+    "PATCH",
+    authToken,
+  );
+}
