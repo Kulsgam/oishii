@@ -93,3 +93,15 @@ export async function getUserFoodByUserId(
     authToken,
   );
 }
+
+export async function fullfillFoodReq(
+  foodId: string,
+  authToken: string,
+): Promise<ResponseType<FoodType>> {
+  return apiRequest<FoodType, void>(
+    `/api/v1/foods/foods/${foodId}/fulfill`,
+    undefined,
+    "PATCH",
+    authToken,
+  );
+}
