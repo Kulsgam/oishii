@@ -14,7 +14,7 @@ export interface RegisterUserRequest {
 }
 
 // Define success response type
-export interface RegisterUserResponse {
+export interface FullUserProfile {
   id: string;
   email: string;
   first_name: string;
@@ -32,6 +32,8 @@ export interface RegisterUserResponse {
   swap_rating: number;
   is_verified: boolean;
 }
+
+export interface UpdateUserProfileRequest extends Omit<FullUserProfile, "id" | "created_at" | "updated_at" | "swap_rating" | "is_verified"> {}
 
 export interface TokenUserResponse {
   accessToken: string;

@@ -2,8 +2,9 @@ import {
   ApiError,
   CallbackUserRequest,
   RegisterUserRequest,
-  RegisterUserResponse,
+  FullUserProfile,
   VerifyUserRequest,
+  UpdateUserProfileRequest,
 } from "./types";
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import api from "./api";
@@ -50,8 +51,8 @@ export async function apiRequest<T, D = undefined>(
 
 export async function registerUser(
   userData: RegisterUserRequest,
-): Promise<RegisterUserResponse> {
-  return apiRequest<RegisterUserResponse, RegisterUserRequest>(
+): Promise<FullUserProfile> {
+  return apiRequest<FullUserProfile, RegisterUserRequest>(
     "/api/v1/users/register",
     userData,
   );
@@ -59,8 +60,8 @@ export async function registerUser(
 
 export async function verifyUser(
   userData: VerifyUserRequest,
-): Promise<RegisterUserResponse> {
-  return apiRequest<RegisterUserResponse, VerifyUserRequest>(
+): Promise<FullUserProfile> {
+  return apiRequest<FullUserProfile, VerifyUserRequest>(
     "/api/v1/users/verify",
     userData,
     "GET",
@@ -79,12 +80,24 @@ export async function callbackHandler(
 
 export async function getUserProfile(
   authToken: string,
-): Promise<RegisterUserResponse> {
-  return apiRequest<RegisterUserResponse>(
+): Promise<FullUserProfile> {
+  return apiRequest<FullUserProfile>(
     "/api/v1/users/profile",
     undefined,
     "GET",
     authToken,
     "application/json",
+  );
+}
+
+export async function updateUserProfile(
+  authToken: string,
+  userData: UpdateUserProfileRequest,
+): Promise<FullUserProfile> {
+  return apiRequest<FullUserProfile, UpdateUserProfileRequest>(
+    "/api/v1/users/profile",
+    userData,
+    "PATCH",
+    authToken,
   );
 }
