@@ -5,6 +5,7 @@
 @theme {
   --font-moul: Moul, "sans-serif";
   --font-montserrat: Montserrat, "sans-serif";
+  --font-montagu-slab: "Montagu Slab", "sans-serif";
 }
 
 :root {
