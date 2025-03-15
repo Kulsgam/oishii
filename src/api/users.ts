@@ -48,6 +48,18 @@ export async function getUserProfile(
   );
 }
 
+export async function getPublicProfile(
+  userId: string,
+  authToken: string,
+): Promise<ResponseType<FullUserProfile>> {
+  return apiRequest<FullUserProfile>(
+    `/api/v1/users/${userId}`,
+    undefined,
+    "GET",
+    authToken,
+  );
+}
+
 export async function updateUserProfile(
   authToken: string,
   userData: UpdateUserProfileRequest,
