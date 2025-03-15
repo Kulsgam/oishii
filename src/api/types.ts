@@ -156,6 +156,11 @@ export interface GetSwapsResponse {
   swaps: Swap[];
 }
 
+export interface UpdateSwapStatusRequest {
+  status: string; // e.g. "potential", "accepted", "rejected", "completed"
+  response_message: string;
+}
+
 export interface Foods {
   foods: FoodType[];
 }

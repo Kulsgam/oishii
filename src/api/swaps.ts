@@ -6,6 +6,7 @@ import {
   GetSwapsResponse,
   ResponseType,
   Swap,
+  UpdateSwapStatusRequest,
 } from "./types";
 
 export async function createSwap(
@@ -40,6 +41,19 @@ export async function getSwapById(
     `/api/v1/swaps/swaps/${swapId}`,
     undefined,
     "GET",
+    authToken,
+  );
+}
+
+export async function updateSwapStatus(
+  swapId: string,
+  updateData: UpdateSwapStatusRequest,
+  authToken: string,
+): Promise<ResponseType<Swap>> {
+  return apiRequest<Swap, UpdateSwapStatusRequest>(
+    `/api/v1/swaps/swaps/${swapId}`,
+    updateData,
+    "PATCH",
     authToken,
   );
 }
