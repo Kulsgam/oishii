@@ -6,7 +6,7 @@ import { ArrowLeft } from "lucide-react";
 import Center from "@/components/Center";
 import { FloatingLabelInputSmall } from "@/components/FloatingLabelInputSmall";
 
-export default function NameForm() {
+export default function Allergies() {
     const [allergies, setAllergies] = useState("");
 
     return (

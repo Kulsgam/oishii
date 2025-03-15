@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import Center from "@/components/Center";
 
-export default function NameForm() {
+export default function Dietary() {
 
     return (
         <Center>
