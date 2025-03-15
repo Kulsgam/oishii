@@ -48,6 +48,10 @@ export interface DummyTokenUserResponse extends TokenUserResponse {
   email: string;
 }
 
+export interface DummyTokenUserRequest {
+  email: string;
+}
+
 export interface TokenUserRequest {
   username: string;
   password: string;

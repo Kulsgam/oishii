@@ -7,9 +7,9 @@ import {
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import api from "./api";
 
-export async function apiRequest<T>(
+export async function apiRequest<T, D = undefined>(
   url: string,
-  data?: object | string, // Data for POST/PATCH requests
+  data?: D, // Data for POST/PATCH requests
   contentType: string = "application/json",
   method: "GET" | "POST" | "PATCH" = "POST",
   authToken?: string,
@@ -50,11 +50,19 @@ export async function apiRequest<T>(
 export async function registerUser(
   userData: RegisterUserRequest,
 ): Promise<RegisterUserResponse> {
-  return apiRequest<RegisterUserResponse>("/api/v1/users/register", userData);
+  return apiRequest<RegisterUserResponse, RegisterUserRequest>(
+    "/api/v1/users/register",
+    userData,
+  );
 }
 
 export async function verifyUser(
   userData: VerifyUserRequest,
 ): Promise<RegisterUserResponse> {
-  return apiRequest<RegisterUserResponse>("/api/v1/users/verify", userData, "application/json", "GET");
+  return apiRequest<RegisterUserResponse, VerifyUserRequest>(
+    "/api/v1/users/verify",
+    userData,
+    "application/json",
+    "GET",
+  );
 }

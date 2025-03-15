@@ -1,4 +1,8 @@
-import { DummyTokenUserResponse, TokenUserResponse } from "@/api/types";
+import {
+  DummyTokenUserRequest,
+  DummyTokenUserResponse,
+  TokenUserResponse,
+} from "@/api/types";
 import { apiRequest } from "@/api/users";
 
 export type DummyCredentials = {
@@ -8,7 +12,10 @@ export type DummyCredentials = {
 };
 
 export async function getDummyCredentials(): Promise<DummyTokenUserResponse> {
-  const { accessToken, tokenType } = await apiRequest<TokenUserResponse>(
+  const { accessToken, tokenType } = await apiRequest<
+    TokenUserResponse,
+    DummyTokenUserRequest
+  >(
     "/api/v1/token",
     {
       email: "dummy@gmail.com",
