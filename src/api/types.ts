@@ -33,6 +33,11 @@ export interface RegisterUserResponse {
   is_verified: boolean;
 }
 
+export interface VerifyUserRequest {
+  email: string;
+  code: string;
+}
+
 // Define error response type
 export interface ValidationError {
   loc: (string | number)[];
@@ -40,6 +45,6 @@ export interface ValidationError {
   type: string;
 }
 
-export interface RegisterUserError {
+export interface ApiError {
   detail: ValidationError[];
 }
