@@ -115,6 +115,46 @@ export interface ValidationError {
   msg: string;
   type: string;
 }
+export interface CreateSwapRequest {
+  provider_id: string;
+  provider_food_id: string;
+  requester_food_id: string;
+  message: string;
+}
+
+export interface CreateSwapResponse {
+  id: string;
+  provider_id: string;
+  requester_id: string;
+  provider_food_id: string;
+  requester_food_id: string;
+  response_message: string;
+  status: string; // e.g. "potential", "confirmed", etc.
+  created_at: string;
+  updated_at: string;
+}
+
+export interface GetSwapsQueryParams {
+  status?: string;
+  role?: string;
+}
+
+export interface Swap {
+  id: string;
+  requester_id: string;
+  provider_id: string;
+  requester_food_id: string;
+  provider_food_id: string;
+  message: string;
+  response_message: string;
+  status: string; // e.g. "potential", "confirmed"
+  created_at: string;
+  updated_at: string;
+}
+
+export interface GetSwapsResponse {
+  swaps: Swap[];
+}
 
 export interface Foods {
   foods: FoodType[];
