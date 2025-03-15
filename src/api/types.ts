@@ -216,3 +216,22 @@ export interface GetPersonalizedFoodsQueryParams {
   skip?: number;
   limit?: number;
 }
+
+export interface Notification {
+  id: string;
+  user_id: string;
+  type: string; // e.g. "swap_request"
+  title: string;
+  message: string;
+  related_id: string; // ID related to the notification (e.g. swap ID)
+  is_read: boolean;
+  created_at: string;
+}
+
+/** Query parameters for getting notifications */
+export interface GetNotificationsQueryParams {
+  is_read?: boolean; // Whether to filter by read/unread
+  type?: string; // e.g. "swap_request", "general", etc.
+  skip?: number; // Pagination offset
+  limit?: number; // Pagination limit
+}
