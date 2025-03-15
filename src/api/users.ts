@@ -2,17 +2,14 @@ import {
   ApiError,
   RegisterUserRequest,
   RegisterUserResponse,
-  TokenUserRequest,
-  TokenUserResponse,
   VerifyUserRequest,
 } from "./types";
-import axios, { AxiosError } from "axios";
+import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import api from "./api";
-import qs from "qs";
 
-async function apiRequest<T>(
+export async function apiRequest<T>(
   url: string,
-  data?: object | string,
+  data?: object | string, // Data for POST/PATCH requests
   contentType: string = "application/json",
   method: "GET" | "POST" | "PATCH" = "POST",
   authToken?: string,
@@ -26,13 +23,14 @@ async function apiRequest<T>(
       headers["Authorization"] = `Bearer ${authToken}`;
     }
 
-    const response = await api({
+    const config: AxiosRequestConfig = {
       method,
       url,
-      data,
       headers,
-    });
+      ...(method === "GET" ? { params: data } : { data }),
+    };
 
+    const response = await api(config);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -59,14 +57,4 @@ export async function verifyUser(
   userData: VerifyUserRequest,
 ): Promise<RegisterUserResponse> {
   return apiRequest<RegisterUserResponse>("/api/v1/users/verify", userData);
-}
-
-export async function accessToken(
-  userData: TokenUserRequest,
-): Promise<TokenUserResponse> {
-  return apiRequest<TokenUserResponse>(
-    "/api/v1/token",
-    qs.stringify(userData),
-    "application/x-www-form-urlencoded",
-  );
 }

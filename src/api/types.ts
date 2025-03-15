@@ -34,13 +34,17 @@ export interface RegisterUserResponse {
 }
 
 export interface TokenUserResponse {
-  access_token: string;
-  token_type: string;
+  accessToken: string;
+  tokenType: string;
 }
 
 export interface VerifyUserRequest {
   email: string;
   code: string;
+}
+
+export interface DummyTokenUserResponse extends TokenUserResponse {
+  email: string;
 }
 
 export interface TokenUserRequest {
