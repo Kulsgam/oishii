@@ -10,6 +10,32 @@ import { useNavigate } from "react-router";
 export default function HomeAddress() {
     const navigate = useNavigate();
     const [homeAddress, setHomeAddress] = useState("");
+    const [error, setError] = useState<string | null>(null);
+    const [skipAddress, setSkipAddress] = useState(false);
+
+    const validateForm = () => {
+        if (!homeAddress.trim() && !skipAddress) {
+            setError("Please enter your address or click 'Fill this later'");
+            return false;
+        }
+        setError(null);
+        return true;
+    };
+
+    const handleContinue = () => {
+        if (validateForm()) {
+            if (homeAddress.trim()) {
+                localStorage.setItem("user_home_address", homeAddress);
+            }
+            navigate("/intro/uniemail");
+        }
+    };
+
+    const handleSkip = () => {
+        setSkipAddress(true);
+        setError(null);
+        navigate("/intro/uniemail");
+    };
 
     return (
         <Center>
@@ -25,18 +51,23 @@ export default function HomeAddress() {
                             onChange={(e) => setHomeAddress(e.target.value)}
                         />
 
-                        <h1 className="font-montserrat text-[15px] mt-2 font-semibold cursor-pointer">
+                        {error && (
+                            <p className="text-white text-sm mt-1">{error}</p>
+                        )}
+
+                        <h1 
+                            className="font-montserrat text-[15px] mt-2 font-semibold cursor-pointer"
+                            onClick={handleSkip}
+                        >
                             You can fill this later in your profile
                         </h1>
-
                     </div>
                     <Button
                         className="font-montserrat h-[40px] w-full rounded-[20px] bg-white text-[15px] text-[#f57600] hover:bg-white/90 cursor-pointer"
-                        onClick={() => navigate("/intro/uniemail")}
+                        onClick={handleContinue}
                     >
                         CONTINUE
                     </Button>
-
 
                     <div className="fixed bottom-6 left-6">
                         <Button

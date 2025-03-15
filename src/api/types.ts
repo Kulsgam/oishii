@@ -89,6 +89,16 @@ export interface VerifyUserRequest {
   email: string;
 }
 
+export interface LoginRequest {
+  username: string;
+  password: string;
+}
+
+export interface LoginResponse {
+  access_token: string;
+  token_type: string;
+}
+
 export interface DummyTokenUserResponse extends TokenUserResponse {
   email: string;
 }

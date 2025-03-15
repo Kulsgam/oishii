@@ -3,17 +3,45 @@
 import type React from "react"
 
 import { ArrowLeft, Plus } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
-import { useNavigate } from "react-router"
+import { useNavigate, useLocation } from "react-router"
+import MobileNav from "./MobileNav"
 
 export default function MealForm() {
     const navigate = useNavigate();
+    const location = useLocation();
     const [imageUrl, setImageUrl] = useState<string>("")
     const [isUploading, setIsUploading] = useState(false)
+    const [formType, setFormType] = useState<'post' | 'request'>('post')
+    const [referenceId, setReferenceId] = useState<string | null>(null)
+    const [title, setTitle] = useState("")
+    const [description, setDescription] = useState("")
+
+    // Parse query parameters
+    useEffect(() => {
+        const queryParams = new URLSearchParams(location.search);
+        const type = queryParams.get('type');
+        const reference = queryParams.get('reference');
+        
+        if (type === 'post' || type === 'request') {
+            setFormType(type);
+        } else {
+            // Check localStorage as fallback
+            const storedType = localStorage.getItem('meal_form_type');
+            if (storedType === 'post' || storedType === 'request') {
+                setFormType(storedType);
+            }
+        }
+        
+        if (reference) {
+            setReferenceId(reference);
+            // TODO: Fetch meal details if we have a reference ID
+        }
+    }, [location.search]);
 
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
@@ -28,41 +56,88 @@ export default function MealForm() {
         }
     }
 
+    const handleContinue = () => {
+        // Store form data in localStorage for the next steps
+        localStorage.setItem('meal_form_data', JSON.stringify({
+            type: formType,
+            title,
+            description,
+            imageUrl,
+            referenceId
+        }));
+        
+        navigate("/dashboard/timeselector");
+    }
+
     return (
         <div className="min-h-screen bg-white p-4">
             {/* Header */}
             <div className="mb-6 flex items-center">
                 <ArrowLeft className="h-6 w-6 text-[#FF6B00] cursor-pointer" onClick={() => navigate("/dashboard/mealswap")} />
-                <h1 className="ml-4 text-2xl font-semibold text-[#FF6B00]">Describe Your Meal</h1>
+                <h1 className="ml-4 text-2xl font-semibold text-[#FF6B00]">
+                    {formType === 'post' ? 'Describe Your Meal' : 'Request a Meal'}
+                </h1>
             </div>
 
             {/* Form */}
-            <form className="space-y-6">
-                <Input placeholder="Insert Meal Name" className="border-[#FF6B00] border-opacity-50" />
+            <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); handleContinue(); }}>
+                <Input 
+                    placeholder={formType === 'post' ? "Insert Meal Name" : "What meal are you looking for?"} 
+                    className="border-[#FF6B00] border-opacity-50"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    required
+                />
 
-                {/* Image Upload Area */}
-                <div className="relative aspect-square w-full">
-                    <label
-                        className={`flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed
-              ${imageUrl ? "border-transparent" : "border-[#FF6B00] border-opacity-50"}`}
-                    >
-                        {imageUrl ? (
-                            <img src={imageUrl || "/placeholder.svg"} alt="Meal preview" className="rounded-lg object-cover" />
-                        ) : (
-                            <div className="flex flex-col items-center justify-center">
-                                <Plus className="h-8 w-8 text-[#FF6B00]" />
-                                <span className="mt-2 text-sm text-[#FF6B00]">Add A Picture</span>
-                            </div>
-                        )}
-                        <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
-                    </label>
+                {formType === 'post' && (
+                    /* Image Upload Area - only for posts */
+                    <div className="relative aspect-square w-full">
+                        <label
+                            className={`flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed
+                  ${imageUrl ? "border-transparent" : "border-[#FF6B00] border-opacity-50"}`}
+                        >
+                            {imageUrl ? (
+                                <img src={imageUrl} alt="Meal preview" className="h-full w-full rounded-lg object-cover" />
+                            ) : (
+                                <div className="flex flex-col items-center justify-center">
+                                    <Plus className="h-8 w-8 text-[#FF6B00]" />
+                                    <span className="mt-2 text-sm text-[#FF6B00]">Add A Picture</span>
+                                </div>
+                            )}
+                            <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
+                        </label>
+                    </div>
+                )}
+                
+                <div>
+                    <Label htmlFor="meal-description">
+                        {formType === 'post' ? 'Meal Description' : 'Request Details'}
+                    </Label>
+                    <Textarea 
+                        id="meal-description"
+                        placeholder={formType === 'post' 
+                            ? "Describe your meal, ingredients, etc." 
+                            : "Describe what you're looking for, any dietary requirements, etc."
+                        } 
+                        className="min-h-[100px] border-[#FF6B00] border-opacity-50 mt-2"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        required
+                    />
                 </div>
-                <Label htmlFor="meal-description">Your message</Label>
-                <Textarea name="meal-description" placeholder="Insert Meal Description" className="min-h-[100px] border-[#FF6B00] border-opacity-50" />
 
-                <Button className="w-full bg-[#FF6B00] hover:bg-[#FF6B00]/90 cursor-pointer" onClick={() => navigate("/dashboard/timeselector")} > Continue</Button>
+                <Button 
+                    type="submit"
+                    className="w-full bg-[#FF6B00] hover:bg-[#FF6B00]/90 cursor-pointer text-white"
+                    disabled={!title.trim() || !description.trim()}
+                >
+                    Continue
+                </Button>
             </form>
-        </div >
+            
+            {/* Mobile Navigation */}
+            <MobileNav />
+        </div>
     )
 }
 
