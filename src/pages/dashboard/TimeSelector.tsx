@@ -19,15 +19,42 @@ export default function MealScheduler() {
         "8:30 - 9:00 AM",
         "9:00 - 9:30 AM",
         "9:30 - 10:00 AM",
+        "10:00 - 10:30 AM",
         "10:30 - 11:00 AM",
         "11:00 - 11:30 AM",
+        "11:30 - 12:00 PM",
+        "12:00 - 12:30 PM",
+        "12:30 - 1:00 PM",
+        "1:00 - 1:30 PM",
+        "1:30 - 2:00 PM",
+        "2:00 - 2:30 PM",
+        "2:30 - 3:00 PM",
+        "3:00 - 3:30 PM",
+        "3:30 - 4:00 PM",
+        "4:00 - 4:30 PM",
+        "4:30 - 5:00 PM",
+        "5:00 - 5:30 PM",
+        "5:30 - 6:00 PM",
+        "6:00 - 6:30 PM",
+        "6:30 - 7:00 PM",
+        "7:00 - 7:30 PM",
+        "7:30 - 8:00 PM"
     ]
 
     const dates = [
         { value: "today", label: "Today", subtext: "March 15" },
         { value: "tomorrow", label: "Tomorrow", subtext: "March 16" },
-        { value: "tuesday", label: "Tuesday", subtext: "March 17" },
-    ]
+        { value: "sunday", label: "Sunday", subtext: "March 17" },
+        { value: "monday", label: "Monday", subtext: "March 18" },
+        { value: "tuesday", label: "Tuesday", subtext: "March 19" },
+        { value: "wednesday", label: "Wednesday", subtext: "March 20" },
+        { value: "thursday", label: "Thursday", subtext: "March 21" },
+        { value: "friday", label: "Friday", subtext: "March 22" },
+        { value: "saturday", label: "Saturday", subtext: "March 23" },
+        { value: "sunday", label: "Sunday", subtext: "March 24" }
+    ];
+
+
 
     const navigate = useNavigate();
 
@@ -44,8 +71,8 @@ export default function MealScheduler() {
                         <p className="text-gray-600">When would you like your meal to be picked up / delivered by others?</p>
                     </div>
 
-                    <Tabs defaultValue="today" className="w-full">
-                        <TabsList className="grid w-full grid-cols-3 bg-gray-100 p-1 h-auto">
+                    <Tabs defaultValue="today">
+                        <TabsList className="w-full justify-start bg-gray-100 h-[150px] overflow-x-auto -pl-20">
                             {dates.map((date) => (
                                 <TabsTrigger
                                     key={date.value}
@@ -59,7 +86,7 @@ export default function MealScheduler() {
                         </TabsList>
                     </Tabs>
 
-                    <RadioGroup value={selectedTime} onValueChange={setSelectedTime} className="flex flex-col gap-3">
+                    <RadioGroup value={selectedTime} onValueChange={setSelectedTime} className="flex flex-col gap-3 overflow-y-auto h-[500px]">
                         {timeSlots.map((time) => (
                             <Label
                                 key={time}
