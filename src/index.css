@@ -2,12 +2,9 @@
 
 @plugin "tailwindcss-animate";
 
-/* @font-face {
-  font-family: "Moul";
-  src: url("/src/assets/fonts/Moul-Regular.ttf") format("ttf");
-  font-weight: normal;
-  font-style: normal;
-} */
+@theme {
+  --font-moul: Moul, "sans-serif";
+}
 
 :root {
   --radius: 0.625rem;
