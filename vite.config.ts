@@ -5,7 +5,6 @@ import tailwindcss from "@tailwindcss/vite";
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => ({
-  base: mode === "production" ? "/oishii/" : "/", // Adjusts base for GitHub Pages
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
