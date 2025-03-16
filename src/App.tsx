@@ -25,12 +25,15 @@ import DeliveryMethod from "./pages/dashboard/DeliveryMethod";
 import MealDetail from "./pages/dashboard/MealDetail";
 import Profile from "./pages/dashboard/Profile";
 import DrFoodlove from "./pages/dashboard/DrFoodlove";
+import WebcamComponent from "./pages/test";
+import WebcamCapture from "./pages/test";
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Navigate to="/intro/welcome" />} />
+        <Route path="/" element={<Navigate to="/test" />} />
+        <Route path="/test" element={<WebcamCapture />} />
         <Route path="intro/welcome" element={<Welcome />} />
         <Route path="intro/login" element={<Login />} />
         <Route path="intro/nameform" element={<NameForm />} />
@@ -45,7 +48,7 @@ function App() {
         <Route path="intro/uniemail" element={<UniEmail />} />
         <Route path="intro/verification" element={<Verification />} />
         <Route path="intro/loading" element={<Loading />} />
-        
+
         {/* Protected Dashboard Routes */}
         <Route path="/dashboard/discovermeal" element={
           <ProtectedRoute>
