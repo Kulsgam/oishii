@@ -28,3 +28,15 @@ export async function getTicketTransactions(
     authToken,
   );
 }
+
+export async function claimFood(
+  foodId: string,
+  authToken: string,
+): Promise<ResponseType<string>> {
+  return apiRequest<string, null>(
+    `/api/v1/tickets/tickets/claim-food/${foodId}`,
+    null,
+    "POST",
+    authToken,
+  );
+}
