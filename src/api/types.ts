@@ -267,3 +267,18 @@ export type TicketBalanceResponse = {
   user_id: string;
   last_updated: string;
 };
+
+export interface GetTicketTransactionsQueryParams {
+  skip?: number;
+  limit?: number;
+}
+
+export interface TicketTransaction {
+  id: string;
+  user_id: string;
+  amount: number;
+  transaction_type: string;
+  related_food_id: string;
+  description: string;
+  created_at: string;
+}
