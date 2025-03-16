@@ -11,7 +11,10 @@ export default function MobileNav() {
                         className="h-6 w-6 cursor-pointer" 
                         onClick={() => navigate("/dashboard/discovermeal")}
                     />
-                    <Heart className="h-6 w-6 cursor-pointer" />
+                    <Heart 
+                        className="h-6 w-6 cursor-pointer" 
+                        onClick={() => navigate("/dashboard/drfoodlove")}
+                    />
                 </div>
                 <div className="flex gap-x-14">
                     <MessageCircle className="h-6 w-6 cursor-pointer" />

@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes, Link, Navigate } from "react-router";
+import { BrowserRouter as Router, Route, Routes, Link, Navigate } from "react-router-dom";
 import Loading from "@/pages/intro/Loading";
 import GetStarted from "@/pages/intro/GetStarted";
 import CookType from "@/pages/intro/CookType";
@@ -23,6 +23,7 @@ import TimeSelector from "./pages/dashboard/TimeSelector";
 import DeliveryMethod from "./pages/dashboard/DeliveryMethod";
 import MealDetail from "./pages/dashboard/MealDetail";
 import Profile from "./pages/dashboard/Profile";
+import DrFoodlove from "./pages/dashboard/DrFoodlove";
 
 function App() {
   return (
@@ -83,6 +84,11 @@ function App() {
         <Route path="/dashboard/profile" element={
           <ProtectedRoute>
             <Profile />
+          </ProtectedRoute>
+        } />
+        <Route path="/dashboard/drfoodlove" element={
+          <ProtectedRoute>
+            <DrFoodlove />
           </ProtectedRoute>
         } />
       </Routes>
