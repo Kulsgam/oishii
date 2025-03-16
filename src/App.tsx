@@ -13,6 +13,7 @@ import UniEmail from "@/pages/intro/UniEmail";
 import Verification from "@/pages/intro/Verification";
 import Login from "@/pages/intro/Login";
 import Welcome from "@/pages/intro/Welcome";
+import DescribeNeeds from "@/pages/intro/DescribeNeeds";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { Toaster } from "@/components/ui/toaster";
 
@@ -45,6 +46,7 @@ function App() {
         <Route path="intro/uniemail" element={<UniEmail />} />
         <Route path="intro/verification" element={<Verification />} />
         <Route path="intro/loading" element={<Loading />} />
+        <Route path="intro/describeneeds" element={<DescribeNeeds />} />
         
         {/* Protected Dashboard Routes */}
         <Route path="/dashboard/discovermeal" element={
