@@ -242,3 +242,19 @@ export interface GetNotificationsQueryParams {
 export interface MarkNotificationsRequest {
   is_read: boolean; // true to mark as read, false to mark as unread
 }
+
+export interface Rating {
+  swap_id: string;
+  rating: number;
+  comment: string;
+  id: string;
+  rater_id: string;
+  rated_user_id: string;
+  created_at: string;
+}
+
+export interface CreateRatingRequest {
+    swap_id: string;
+    rating: number;
+    comment: string;
+}
