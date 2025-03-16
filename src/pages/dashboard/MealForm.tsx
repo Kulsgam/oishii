@@ -10,13 +10,14 @@ import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { useNavigate, useLocation } from "react-router"
 import MobileNav from "./MobileNav"
+import WebcamCapture from "../test"
 
 export default function MealForm() {
     const navigate = useNavigate();
     const location = useLocation();
     const [imageUrl, setImageUrl] = useState<string>("")
     const [isUploading, setIsUploading] = useState(false)
-    const [formType, setFormType] = useState<'post' | 'request'>('post')
+    const [formType, setFormType] = useState<'post' | 'request' | 'share'>('post')
     const [referenceId, setReferenceId] = useState<string | null>(null)
     const [title, setTitle] = useState("")
     const [description, setDescription] = useState("")
@@ -26,17 +27,17 @@ export default function MealForm() {
         const queryParams = new URLSearchParams(location.search);
         const type = queryParams.get('type');
         const reference = queryParams.get('reference');
-        
-        if (type === 'post' || type === 'request') {
+
+        if (type === 'post' || type === 'request' || type === "share") {
             setFormType(type);
         } else {
             // Check localStorage as fallback
             const storedType = localStorage.getItem('meal_form_type');
-            if (storedType === 'post' || storedType === 'request') {
+            if (storedType === 'post' || storedType === 'request' || storedType === "share") {
                 setFormType(storedType);
             }
         }
-        
+
         if (reference) {
             setReferenceId(reference);
             // TODO: Fetch meal details if we have a reference ID
@@ -65,7 +66,7 @@ export default function MealForm() {
             imageUrl,
             referenceId
         }));
-        
+
         navigate("/dashboard/timeselector");
     }
 
@@ -75,14 +76,14 @@ export default function MealForm() {
             <div className="mb-6 flex items-center">
                 <ArrowLeft className="h-6 w-6 text-[#FF6B00] cursor-pointer" onClick={() => navigate("/dashboard/mealswap")} />
                 <h1 className="ml-4 text-2xl font-semibold text-[#FF6B00]">
-                    {formType === 'post' ? 'Describe Your Meal' : 'Request a Meal'}
+                    {formType === 'post' ? 'Describe Your Meal' : formType === 'request' ? 'Request a Meal' : 'Share Ingredients'}
                 </h1>
             </div>
 
             {/* Form */}
             <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); handleContinue(); }}>
-                <Input 
-                    placeholder={formType === 'post' ? "Insert Meal Name" : "What meal are you looking for?"} 
+                <Input
+                    placeholder={formType === 'post' ? "Insert Meal Name" : formType === 'request' ? "What meal are you looking for?" : "Ingredient name"}
                     className="border-[#FF6B00] border-opacity-50"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
@@ -108,17 +109,18 @@ export default function MealForm() {
                         </label>
                     </div>
                 )}
-                
+
                 <div>
                     <Label htmlFor="meal-description">
                         {formType === 'post' ? 'Meal Description' : 'Request Details'}
                     </Label>
-                    <Textarea 
+                    <Textarea
                         id="meal-description"
-                        placeholder={formType === 'post' 
-                            ? "Describe your meal, ingredients, etc." 
-                            : "Describe what you're looking for, any dietary requirements, etc."
-                        } 
+                        placeholder={formType === 'post'
+                            ? "Describe your meal, ingredients, etc."
+                            : formType === 'request' ? "Describe what you're looking for, any dietary requirements, etc."
+                                : "Ingredient description"
+                        }
                         className="min-h-[100px] border-[#FF6B00] border-opacity-50 mt-2"
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
@@ -126,7 +128,19 @@ export default function MealForm() {
                     />
                 </div>
 
-                <Button 
+                {
+                    formType === 'share' && (
+                        <div>
+                            <h1 className="text-[#FF6B00] text-xl text-bold">Take a picture of your ingredients</h1>
+                            <div className="rounded-xl border-2">
+                                <WebcamCapture />
+                            </div>
+
+                        </div>
+                    )
+                }
+
+                <Button
                     type="submit"
                     className="w-full bg-[#FF6B00] hover:bg-[#FF6B00]/90 cursor-pointer text-white"
                     disabled={!title.trim() || !description.trim()}
@@ -134,7 +148,7 @@ export default function MealForm() {
                     Continue
                 </Button>
             </form>
-            
+
             {/* Mobile Navigation */}
             <MobileNav />
         </div>
