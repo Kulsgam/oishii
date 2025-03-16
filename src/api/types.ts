@@ -56,22 +56,6 @@ export interface GetFoodByUserIdParams {
   limit?: number;
 }
 
-export interface CreateFoodResponse {
-  title: string;
-  description: string;
-  category: string;
-  food_type: string;
-  dietary_requirements: string[];
-  allergens: string;
-  expiry_date: string;
-  location: string;
-  is_homemade: boolean;
-  is_available: boolean;
-  pickup_times: string[];
-  tickets_required: number;
-  image_url: string;
-}
-
 export interface UpdateUserProfileRequest
   extends Omit<
     FullUserProfile,
@@ -254,7 +238,26 @@ export interface Rating {
 }
 
 export interface CreateRatingRequest {
-    swap_id: string;
-    rating: number;
-    comment: string;
+  swap_id: string;
+  rating: number;
+  comment: string;
 }
+
+export interface SearchFoodRequestQueryParams {
+  search_term?: string;
+  category?: string;
+  min_tickets?: number;
+  max_distance?: number;
+  is_available?: boolean;
+  skip?: number;
+  limit?: number;
+}
+
+export interface SearchFoodRequestResponsElement extends FoodType {
+  user_id: string;
+  id: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export type SearchFoodRequestResponse = SearchFoodRequestResponsElement[];
