@@ -1,14 +1,13 @@
 import { useState } from "react";
-import { ArrowLeft, Search, Send } from "lucide-react";
+import { ArrowLeft, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import MobileNav from "./MobileNav";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { getDrFoodloveRecommendations, DrFoodloveResponse, DrFoodloveRecommendation, HealthInsights } from "@/api/drfoodlove";
+import { getDrFoodloveRecommendations, DrFoodloveRequest, DrFoodloveRecommendation, HealthInsights } from "@/api/drfoodlove";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "@/components/ui/use-toast";
 
@@ -19,6 +18,8 @@ export default function DrFoodlove() {
   const [isLoading, setIsLoading] = useState(false);
   const [recommendations, setRecommendations] = useState<DrFoodloveRecommendation[]>([]);
   const [healthInsights, setHealthInsights] = useState<HealthInsights | null>(null);
+  const [conversation, setConversation] = useState<string | null>(null);
+  const [foodItem, setFoodItem] = useState<any | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,12 +48,61 @@ export default function DrFoodlove() {
       } else if (response.data) {
         setRecommendations(response.data.recommendations || []);
         setHealthInsights(response.data.health_insights || null);
+        setConversation(response.data.conversation || null);
+        setFoodItem(response.data.food_item || null);
       }
     } catch (error) {
       console.error("Error fetching recommendations:", error);
       toast({
         title: "Error",
         description: "Failed to connect to Dr. Foodlove",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Function to fetch food item details
+  const handleFetchFoodItem = async (itemId: string) => {
+    setIsLoading(true);
+    
+    try {
+      const request: DrFoodloveRequest = {
+        query: "Tell me about this food item",
+        include_user_preferences: true,
+        limit: 5,
+        detailed_response: true,
+        item_id: itemId
+      };
+      
+      const response = await getDrFoodloveRecommendations(request, token);
+      
+      if (response.error) {
+        toast({
+          title: "Error",
+          description: response.error.detail || "Failed to get food item details",
+          variant: "destructive"
+        });
+        return;
+      }
+      
+      if (response.data) {
+        setRecommendations(response.data.recommendations || []);
+        setHealthInsights(response.data.health_insights || null);
+        setConversation(response.data.conversation || null);
+        setFoodItem(response.data.food_item || null);
+        
+        // If we have a food item, navigate to its detail page
+        if (response.data.food_item) {
+          navigate(`/dashboard/meal/${response.data.food_item.id}`);
+        }
+      }
+    } catch (err) {
+      console.error("Error fetching food item:", err);
+      toast({
+        title: "Error",
+        description: "Failed to get food item details",
         variant: "destructive"
       });
     } finally {
@@ -193,6 +243,55 @@ export default function DrFoodlove() {
             <p className="text-gray-600">Dr. Foodlove is thinking...</p>
           </div>
         )}
+        
+        {/* Display conversation if available */}
+        {conversation && !isLoading && (
+          <Card className="mb-6 border-[#FF6B00]/20">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg">Dr. Foodlove Says</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-sm space-y-2">
+                {conversation.split('\n').map((line, i) => (
+                  <p key={i} className={line.trim() === '' ? 'my-2' : 'my-1'}>
+                    {line}
+                  </p>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+        
+        {/* Display food item if available */}
+        {foodItem && !isLoading && (
+          <Card className="mb-6 border-[#FF6B00]/20 cursor-pointer hover:shadow-md transition-shadow" 
+                onClick={() => navigate(`/dashboard/meal/${foodItem.id}`)}>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg">Food Item Details</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                <h3 className="font-bold text-lg">{foodItem.title}</h3>
+                <p className="text-gray-700">{foodItem.description}</p>
+                {foodItem.image_url && (
+                  <img 
+                    src={foodItem.image_url} 
+                    alt={foodItem.title} 
+                    className="w-full h-40 object-cover rounded-md my-2"
+                  />
+                )}
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {foodItem.dietary_requirements && foodItem.dietary_requirements.map((req: string, i: number) => (
+                    <Badge key={i} variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                      {req}
+                    </Badge>
+                  ))}
+                </div>
+                <p className="text-sm text-gray-500 mt-2">Click to view details</p>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Recommendations */}
         {recommendations.length > 0 && (
@@ -247,7 +346,7 @@ export default function DrFoodlove() {
                   <div>
                     <h4 className="font-semibold text-sm mb-1">Ingredients:</h4>
                     <div className="flex flex-wrap gap-1">
-                      {rec.ingredients.map((ingredient: string, i: number) => (
+                      {rec.ingredients && rec.ingredients.map((ingredient: string, i: number) => (
                         <Badge key={i} variant="outline" className="bg-gray-50">
                           {ingredient}
                         </Badge>
@@ -264,30 +363,41 @@ export default function DrFoodlove() {
                     <h4 className="font-semibold text-sm mb-1">Nutritional Info:</h4>
                     <div className="grid grid-cols-5 gap-2 text-center">
                       <div className="text-xs">
-                        <span className="block font-medium">{rec.nutritional_info.calories}</span>
+                        <span className="block font-medium">{rec.nutritional_info?.calories}</span>
                         <span className="text-gray-500">cal</span>
                       </div>
                       <div className="text-xs">
-                        <span className="block font-medium">{rec.nutritional_info.protein}g</span>
+                        <span className="block font-medium">{rec.nutritional_info?.protein}g</span>
                         <span className="text-gray-500">protein</span>
                       </div>
                       <div className="text-xs">
-                        <span className="block font-medium">{rec.nutritional_info.carbs}g</span>
+                        <span className="block font-medium">{rec.nutritional_info?.carbs}g</span>
                         <span className="text-gray-500">carbs</span>
                       </div>
                       <div className="text-xs">
-                        <span className="block font-medium">{rec.nutritional_info.fat}g</span>
+                        <span className="block font-medium">{rec.nutritional_info?.fat}g</span>
                         <span className="text-gray-500">fat</span>
                       </div>
                       <div className="text-xs">
-                        <span className="block font-medium">{rec.nutritional_info.fiber}g</span>
+                        <span className="block font-medium">{rec.nutritional_info?.fiber}g</span>
                         <span className="text-gray-500">fiber</span>
                       </div>
                     </div>
                   </div>
+                  
+                  {/* Add a button to fetch food item if it has an ID */}
+                  {rec.food_id && (
+                    <Button 
+                      variant="outline" 
+                      className="w-full mt-2"
+                      onClick={() => handleFetchFoodItem(rec.food_id)}
+                    >
+                      View Food Details
+                    </Button>
+                  )}
                 </CardContent>
                 <CardFooter className="flex flex-wrap gap-1 pt-0">
-                  {rec.dietary_tags.map((tag: string, i: number) => (
+                  {rec.dietary_tags && rec.dietary_tags.map((tag: string, i: number) => (
                     <Badge key={i} variant="outline" className="bg-green-50 text-green-700 border-green-200">
                       {tag}
                     </Badge>

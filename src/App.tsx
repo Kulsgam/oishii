@@ -15,6 +15,8 @@ import Login from "@/pages/intro/Login";
 import Welcome from "@/pages/intro/Welcome";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { Toaster } from "@/components/ui/toaster";
+import { getValidDataStaxToken } from "@/utils/datastaxAuth";
+import { useEffect } from "react";
 
 import "./App.css";
 import DiscoverMeal from "./pages/dashboard/DiscoverMeal";
@@ -27,6 +29,20 @@ import Profile from "./pages/dashboard/Profile";
 import DrFoodlove from "./pages/dashboard/DrFoodlove";
 
 function App() {
+  // Initialize DataStax token when the app starts
+  useEffect(() => {
+    const initializeDataStaxToken = async () => {
+      try {
+        const token = await getValidDataStaxToken();
+        console.log("DataStax token initialized:", token ? "Success" : "Failed");
+      } catch (error) {
+        console.error("Error initializing DataStax token:", error);
+      }
+    };
+    
+    initializeDataStaxToken();
+  }, []);
+
   return (
     <Router>
       <Routes>
