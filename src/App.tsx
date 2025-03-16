@@ -33,7 +33,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Navigate to="/test" />} />
+        <Route path="/" element={<Navigate to="/intro/welcome" />} />
         <Route path="/test" element={<WebcamCapture />} />
         <Route path="intro/welcome" element={<Welcome />} />
         <Route path="intro/login" element={<Login />} />
