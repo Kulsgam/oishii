@@ -9,6 +9,9 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "skipDefaultLibCheck": true
   }
 }
