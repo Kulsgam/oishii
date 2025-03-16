@@ -261,3 +261,9 @@ export interface SearchFoodRequestResponsElement extends FoodType {
 }
 
 export type SearchFoodRequestResponse = SearchFoodRequestResponsElement[];
+
+export type TicketBalanceResponse = {
+  balance: number;
+  user_id: string;
+  last_updated: string;
+};
