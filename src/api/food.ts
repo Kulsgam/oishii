@@ -1,20 +1,22 @@
 import { apiRequest } from "./api";
 import {
   FoodType,
-  CreateFoodResponse,
   ResponseType,
   GetFoodsQueryParams,
   Foods,
   GetFoodsNearbyQueryParams,
   GetFoodByUserIdParams,
   GetPersonalizedFoodsQueryParams,
+  SearchFoodRequestResponse,
+  SearchFoodRequestQueryParams,
+  SearchFoodRequestResponsElement,
 } from "./types";
 
 export async function createFood(
   userData: FoodType,
   authToken: string,
-): Promise<ResponseType<CreateFoodResponse>> {
-  return apiRequest<CreateFoodResponse, FoodType>(
+): Promise<ResponseType<FoodType>> {
+  return apiRequest<FoodType, FoodType>(
     "/api/v1/foods/foods",
     userData,
     "POST",
@@ -114,6 +116,31 @@ export async function getPersonalizedFoods(
   return apiRequest<Foods, GetPersonalizedFoodsQueryParams>(
     "/api/v1/foods/foods/search/personalized",
     queryParams,
+    "GET",
+    authToken,
+  );
+}
+
+export async function searchFoodRequests(
+  requestBody: SearchFoodRequestQueryParams,
+  authToken: string,
+): Promise<ResponseType<SearchFoodRequestResponse>> {
+  return apiRequest<SearchFoodRequestResponse, SearchFoodRequestQueryParams>(
+    "/api/v1/foods/foods/search/requests",
+    requestBody,
+    "GET",
+    authToken,
+  );
+}
+
+export async function getFoodRecommendations(
+  limit: number,
+  include_requests: boolean,
+  authToken: string,
+): Promise<ResponseType<SearchFoodRequestResponsElement>> {
+  return apiRequest<SearchFoodRequestResponsElement, null>(
+    `/api/v1/foods/foods/recommendations?limit=${limit}&include_requests=${include_requests}`,
+    null,
     "GET",
     authToken,
   );
