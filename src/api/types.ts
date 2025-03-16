@@ -47,6 +47,7 @@ export interface FoodType {
   pickup_times: string[];
   tickets_required: number;
   image_url: string;
+  delivery_method?: string; // "pickup", "delivery", or "flexible"
 }
 
 export interface GetFoodByUserIdParams {
@@ -71,6 +72,16 @@ export interface VerifyUserRequest {
   token: string;
   confirmationToken: string;
   email: string;
+}
+
+export interface LoginRequest {
+  username: string;
+  password: string;
+}
+
+export interface LoginResponse {
+  access_token: string;
+  token_type: string;
 }
 
 export interface DummyTokenUserResponse extends TokenUserResponse {

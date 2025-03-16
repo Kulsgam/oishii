@@ -4,9 +4,8 @@ import { useEffect } from "react";
 import Center from "@/components/Center";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router";
-import { ArrowLeft } from "lucide-react";
 
-export default function GetStarted() {
+export default function Welcome() {
   const navigate = useNavigate();
 
   // Clear all user-related localStorage items when the page loads
@@ -33,29 +32,29 @@ export default function GetStarted() {
       <div className="bg-[#f57600] p-6">
         <div className="mx-auto max-w-md space-y-8">
           <h1 className="font-montagu-slab text-[32px] font-bold text-white">
-            Let's Create Your Profile
+            Welcome to Oishii
           </h1>
           <p className="font-montserrat text-[16px] font-bold text-white">
-            We'll need some information to get you started with meal swapping
+            The meal swapping app for university students
           </p>
-          <Button
-            className="font-montserrat h-[40px] w-full rounded-[20px] bg-white text-[15px] text-[#f57600] hover:bg-white/90 cursor-pointer"
-            onClick={() => navigate("/intro/nameform")}
-          >
-            START REGISTRATION
-          </Button>
           
-          <div className="fixed bottom-6 left-6">
+          <div className="space-y-4">
             <Button
-              size="icon"
-              className="text-[#f57600] hover:bg-white/80 bg-white cursor-pointer"
-              onClick={() => navigate("/intro/welcome")}
+              className="font-montserrat h-[40px] w-full rounded-[20px] bg-white text-[15px] text-[#f57600] hover:bg-white/90 cursor-pointer"
+              onClick={() => navigate("/intro/getstarted")}
             >
-              <ArrowLeft className="h-6 w-6" />
+              GET STARTED
+            </Button>
+            
+            <Button
+              className="font-montserrat h-[40px] w-full rounded-[20px] bg-transparent border-2 border-white text-[15px] text-white hover:bg-white/10 cursor-pointer"
+              onClick={() => navigate("/intro/login")}
+            >
+              LOGIN
             </Button>
           </div>
         </div>
       </div>
     </Center>
   );
-}
+} 

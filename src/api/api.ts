@@ -1,8 +1,16 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { ResponseType } from "./types";
 
+// Determine the API base URL based on the environment
+const isDevelopment = import.meta.env.DEV;
+const API_BASE_URL = isDevelopment 
+  ? "http://localhost:8000/" 
+  : "https://oishii-backend.fly.dev/";
+
+console.log(`Using API base URL: ${API_BASE_URL}`);
+
 const api = axios.create({
-  baseURL: "https://oishii-backend.fly.dev/",
+  baseURL: API_BASE_URL,
 });
 
 export default api;
@@ -34,11 +42,14 @@ export async function apiRequest<T, D = undefined>(
     return { data: response.data, error: null };
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
+      console.error("API request error:", error.message);
       if (error.response) {
         // The request was made and the server responded with a status code outside the 2xx range
+        console.error("Response error data:", error.response.data);
         return { data: null, error: error.response.data };
       } else if (error.request) {
         // The request was made but no response was received (e.g., network error)
+        console.error("Network error - no response received");
         return { data: null, error: { detail: "Network error" } };
       } else {
         // Something else happened in setting up the request
@@ -46,6 +57,7 @@ export async function apiRequest<T, D = undefined>(
       }
     } else {
       // Non-Axios error (unexpected issue)
+      console.error("Unexpected error:", error);
       return { data: null, error: { detail: "Unexpected error" } };
     }
   }
