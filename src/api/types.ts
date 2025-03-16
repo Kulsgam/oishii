@@ -282,3 +282,35 @@ export interface TicketTransaction {
   description: string;
   created_at: string;
 }
+
+export interface Recommendation {
+  food_id: string;
+  name: string;
+  description: string;
+  cuisine_type: string;
+  ingredients: string[];
+  match_score: number;
+  image_url: string;
+}
+
+export interface SearchRecommendationResponseType {
+  recommendations: Recommendation[];
+  total: number;
+  search_term: string;
+}
+
+export interface SearchRecommdationQueryParams {
+  search_term: string;
+  user_id: string;
+  limit: number;
+}
+
+export interface Preference {
+    user_id: string;
+    taste_preferences: string[];
+    dietary_restrictions: string[];
+    allergies: string[];
+    cuisine_preferences: string[];
+    created_at: string;
+    updated_at: string;
+}
