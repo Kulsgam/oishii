@@ -3,11 +3,14 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
 import { GoogleMapsProvider } from './components/maps/GoogleMapsProvider'
+import { AuthProvider } from './hooks/AuthProvider'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <GoogleMapsProvider>
-      <App />
-    </GoogleMapsProvider>
+    <AuthProvider>
+      <GoogleMapsProvider>
+        <App />
+      </GoogleMapsProvider>
+    </AuthProvider>
   </StrictMode>,
 )

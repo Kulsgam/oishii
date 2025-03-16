@@ -14,6 +14,7 @@ import Verification from "@/pages/intro/Verification";
 import Login from "@/pages/intro/Login";
 import Welcome from "@/pages/intro/Welcome";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import { Toaster } from "@/components/ui/toaster";
 
 import "./App.css";
 import DiscoverMeal from "./pages/dashboard/DiscoverMeal";
@@ -92,6 +93,7 @@ function App() {
           </ProtectedRoute>
         } />
       </Routes>
+      <Toaster />
     </Router >
   );
 }
